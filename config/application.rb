@@ -30,6 +30,8 @@ module EspressoRailsTest
     # the framework and any gems in your application.
 
     # Don't generate system test files.
+    config.autoload_paths << Rails.root.join('app/resources')
+    config.i18n.default_locale = :"pt-BR"
     config.generators.system_tests = nil
 
     config.assets.initialize_on_precompile = false
@@ -44,6 +46,6 @@ module EspressoRailsTest
           methods: [:get, :patch, :put, :delete, :post, :options,               :show]
         )
       end
-   end
+    end
   end
 end

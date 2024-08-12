@@ -21,6 +21,7 @@
     "shakapacker": "8.0.0",
     "style-loader": "^4.0.0",
     "terser-webpack-plugin": "^5.3.10",
+    "use-mask-input": "^3.4.0",
     "webpack": "^5.92.1",
     "webpack-assets-manifest": "^5.2.1",
     "webpack-cli": "^4.10.0",

@@ -13,4 +13,7 @@ Rails.application.routes.draw do
     registrations: 'users/registrations'
   }
 
+  get '/signup', to: 'users#sign_up'
+  post '/users/create', to: 'users#create'
+
 end

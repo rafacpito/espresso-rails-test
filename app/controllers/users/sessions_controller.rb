@@ -1,15 +1,9 @@
 class Users::SessionsController < Devise::SessionsController
   respond_to :json
-
-  def create
-    binding.pry
-    super
-  end
   
   private
   
   def respond_with(current_user, _opts = {})
-  binding.pry
     render json: {
       status: { 
         code: 200,

@@ -1,10 +1,13 @@
 import React from 'react'
+import { useState } from 'react'
 import {
   Container,
   Typography,
   Box,
   TextField,
-  Button
+  Button,
+  Snackbar,
+  Alert
 } from '@mui/material'
 import { useForm } from "react-hook-form"
 import { styles } from './styles.js'
@@ -19,10 +22,14 @@ const Main = () => {
   } = useForm({
     resolver: yupResolver(schema),
   })
+  const [open, setOpen] = useState(false)
 
   const onSubmit = (data) => {
-    fetch(`http://localhost:3000/login`, {
+    fetch('http://localhost:3000/login', {
       method: "POST",
+      headers: {
+        'Content-Type': 'application/json',
+      },
       body: JSON.stringify({
         user: {
           email: data.email,
@@ -31,11 +38,21 @@ const Main = () => {
       })
     }).then(response => {
       if (response.ok) {
+        //window.location.href = '/expenses/list'
         return response.json();
       }
-      throw new Error("Network response was not ok.");
-    }).then(response => this.props.history.push(`/expenses`))
-      .catch(error => console.log(error.message));
+      if (response.status == 401) {
+        setOpen(true)
+      }
+    }).catch(error => console.log(error.message));
+  }
+
+  const createUser = () => {
+    window.location.href = '/signup'
+  }
+
+  const handleClose = () => {
+    setOpen(false)
   }
 
   return (
@@ -104,7 +121,7 @@ const Main = () => {
                 Entrar
               </Button>
               <Button
-                type='submit'
+                onClick={createUser}
                 variant='outlined'
                 sx={{ mt: 3, mb: 2 }}
               >
@@ -113,8 +130,20 @@ const Main = () => {
             </Box>
           </Box>
         </Box>
-
-
+        <Snackbar
+          open={open}
+          autoHideDuration={6000}
+          onClose={handleClose}
+        >
+          <Alert
+            onClose={handleClose}
+            severity="error"
+            variant="filled"
+            sx={{ width: '100%' }}
+          >
+            Login inválido!
+          </Alert>
+        </Snackbar>
       </Container>
     </React.Fragment >
   )
