@@ -13,7 +13,14 @@ Rails.application.routes.draw do
     registrations: 'users/registrations'
   }
 
+  # users
   get '/signup', to: 'users#sign_up'
   post '/users/create', to: 'users#create'
+  get '/employees/list', to: 'users#list'
+  get '/employees', to: 'users#index_employees'
 
+  # expenses
+  get '/expenses/list', to: 'expenses#list'
+
+  
 end

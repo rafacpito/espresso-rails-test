@@ -8,22 +8,12 @@ class Users::SessionsController < Devise::SessionsController
       status: { 
         code: 200,
         message: 'Logado com sucesso.',
-        data: { user: UserSerializer.new(current_user).serializable_hash[:data][:attributes] }
+        data: { user: UserSerializer.new(current_user).serializable_hash }
       }
     }, status: :ok
   end
 
-  def respond_to_on_destroy    
-    if current_user
-      render json: {
-        status: 200,
-        message: 'Deslogado com sucesso.'
-      }, status: :ok
-    else
-      render json: {
-        status: 401,
-        message: "Sem sessão ativa."
-      }, status: :unauthorized
-    end
+  def respond_to_on_destroy
+    head :ok
   end
 end

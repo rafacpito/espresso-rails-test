@@ -38,7 +38,7 @@ const Main = () => {
       })
     }).then(response => {
       if (response.ok) {
-        //window.location.href = '/expenses/list'
+        window.location.href = '/expenses/list'
         return response.json();
       }
       if (response.status == 401) {
