@@ -15,6 +15,10 @@ import schema from './schema'
 import { yupResolver } from '@hookform/resolvers/yup'
 
 const SignUp = () => {
+  const [openErrorSnackbar, setOpenErrorSnackbar] = useState(false)
+  const [openSuccessSnackbar, setOpenSuccessSnackbar] = useState(false)
+  const [message, setMessage] = useState('')
+
   const {
     register,
     watch,
@@ -24,9 +28,7 @@ const SignUp = () => {
   } = useForm({
     resolver: yupResolver(schema),
   })
-  const [openErrorSnackbar, setOpenErrorSnackbar] = useState(false)
-  const [openSuccessSnackbar, setOpenSuccessSnackbar] = useState(false)
-  const [message, setMessage] = useState('')
+
   const cnpjValue = watch("cnpj")
 
   const normalizeCnpjNumber = (value) => {

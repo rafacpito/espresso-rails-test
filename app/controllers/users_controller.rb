@@ -9,6 +9,16 @@ class UsersController < ApplicationController
     render json: user, serializer: UserSerializer, status: :created
   end
 
+  def destroy
+    user = Users::Destroy.new(params[:id]).execute
+    render json: user, serializer: UserSerializer, status: :ok
+  end
+
+  def update
+    user = Users::Update.new(params).execute
+    render json: user, serializer: UserSerializer, status: :ok
+  end
+
   def list; end
 
   def index_employees

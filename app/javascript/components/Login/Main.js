@@ -15,6 +15,8 @@ import schema from './schema'
 import { yupResolver } from '@hookform/resolvers/yup'
 
 const Main = () => {
+  const [open, setOpen] = useState(false)
+
   const {
     register,
     handleSubmit,
@@ -22,7 +24,6 @@ const Main = () => {
   } = useForm({
     resolver: yupResolver(schema),
   })
-  const [open, setOpen] = useState(false)
 
   const onSubmit = (data) => {
     fetch('http://localhost:3000/login', {

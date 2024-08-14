@@ -5,7 +5,8 @@ class User < ApplicationRecord
          :recoverable, :rememberable, :validatable,
          :jwt_authenticatable, jwt_revocation_strategy: JwtBlacklist
 
-  validates :email, :name, :role, :password, presence: true
+  validates :email, :name, :role, presence: true
 
   belongs_to :company
+  has_one :card
 end

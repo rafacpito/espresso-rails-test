@@ -1,24 +1,25 @@
 import {
   Box,
-  Avatar,
   Typography,
   Button,
   Table,
   TableCell,
   TableRow,
-  TableBody
+  TableBody,
+  Avatar
 } from '@mui/material'
 import {
   Edit as EditIcon,
-  Delete as DeleteIcon
+  Delete as DeleteIcon,
+  Category as CategoryIcon
 } from '@mui/icons-material';
 import { useState } from 'react'
 import { styles } from './styles.js'
-import { DialogConfirmDeletion, DialogEditEmployee } from '../'
+import { DialogConfirmDeletion, DialogEditCategory } from '../'
 
-const EmployeeList = ({
-  employees,
-  setEmployees,
+const CategoryList = ({
+  categories,
+  setCategories,
   setOpenSuccessSnackbar,
   setSuccessMessage,
   setOpenErrorSnackbar,
@@ -26,29 +27,19 @@ const EmployeeList = ({
 }) => {
   const [openDeletion, setOpenDeletion] = useState(false)
   const [deleteIndex, setDeleteIndex] = useState()
-  const [deleteEmployee, setDeleteEmployee] = useState({})
+  const [deleteCategory, setDeleteCategory] = useState({})
   const [openEdit, setOpenEdit] = useState(false)
   const [editIndex, setEditIndex] = useState()
-  const [editEmployee, setEditEmployee] = useState({})
+  const [editCategory, setEditCategory] = useState({})
 
-  const defineAvatarLetters = (employee) => {
-    let splitName = employee.name.split(' ')
-
-    if (splitName.length == 1) {
-      return `${splitName[0][0]}${splitName[0][1]}`.toUpperCase()
-    }
-
-    return `${splitName[0][0]}${splitName[1][0]}`.toUpperCase()
-  }
-
-  const openDialogConfirmDeletion = (employee, index) => {
-    setDeleteEmployee(employee)
+  const openDialogConfirmDeletion = (category, index) => {
+    setDeleteCategory(category)
     setDeleteIndex(index)
     setOpenDeletion(true)
   }
 
-  const openDialogEditEmployee = (employee, index) => {
-    setEditEmployee(employee)
+  const openDialogEditEmployee = (category, index) => {
+    setEditCategory(category)
     setEditIndex(index)
     setOpenEdit(true)
   }
@@ -57,28 +48,27 @@ const EmployeeList = ({
     <Box mt={6}>
       <Table sx={{ minWidth: 650 }} aria-label="simple table">
         <TableBody>
-          {employees?.length === 0 ? (
+          {categories?.length === 0 ? (
 
             <TableRow>
-              <TableCell>Até o momento, não há funcionários cadastrados.</TableCell>
+              <TableCell>Até o momento, não há categorias cadastradas.</TableCell>
             </TableRow>
           ) : (
             ''
           )}
-          {employees?.map((employee, index) => (
+          {categories?.map((category, index) => (
             <TableRow
-              key={employee.id}
+              key={category.id}
             >
               <TableCell scope="row" sx={{ width: '5px', paddingRight: '0' }}>
-                <Avatar children={defineAvatarLetters(employee)} />
+                <Avatar>
+                  <CategoryIcon />
+                </Avatar>
               </TableCell>
               <TableCell scope="row">
                 <Box display='flex' flexDirection='column'>
                   <Typography variant='body1'>
-                    {employee.name}
-                  </Typography>
-                  <Typography variant='body2'>
-                    {employee.email}
+                    {category.name}
                   </Typography>
                 </Box>
               </TableCell>
@@ -87,7 +77,7 @@ const EmployeeList = ({
                   variant='outlined'
                   size="small"
                   onClick={() =>
-                    openDialogEditEmployee(employee, index)
+                    openDialogEditEmployee(category, index)
                   }
                   style={styles.editButton}
                 >
@@ -101,7 +91,7 @@ const EmployeeList = ({
                   variant='outlined'
                   size="small"
                   onClick={() =>
-                    openDialogConfirmDeletion(employee, index)
+                    openDialogConfirmDeletion(category, index)
                   }
                   style={styles.button}
                 >
@@ -118,20 +108,20 @@ const EmployeeList = ({
       <DialogConfirmDeletion
         open={openDeletion}
         setOpen={setOpenDeletion}
-        employee={deleteEmployee}
+        category={deleteCategory}
         index={deleteIndex}
-        setEmployees={setEmployees}
-        employees={employees}
+        setCategories={setCategories}
+        categories={categories}
         setOpenSuccessSnackbar={setOpenSuccessSnackbar}
         setSuccessMessage={setSuccessMessage}
       />
-      <DialogEditEmployee
+      <DialogEditCategory
         open={openEdit}
         setOpen={setOpenEdit}
-        employee={editEmployee}
+        category={editCategory}
         index={editIndex}
-        setEmployees={setEmployees}
-        employees={employees}
+        setCategories={setCategories}
+        categories={categories}
         setOpenSuccessSnackbar={setOpenSuccessSnackbar}
         setSuccessMessage={setSuccessMessage}
         setOpenErrorSnackbar={setOpenErrorSnackbar}
@@ -141,4 +131,4 @@ const EmployeeList = ({
   )
 }
 
-export default EmployeeList
+export default CategoryList

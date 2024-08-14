@@ -65,6 +65,7 @@ const Layout = ({ children, user }) => {
       case 2:
         break
       case 3:
+        window.location.href = '/categories/list'
         break
     }
   }

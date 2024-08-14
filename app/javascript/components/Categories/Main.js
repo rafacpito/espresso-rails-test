@@ -1,10 +1,19 @@
 import React from 'react'
 import Layout from '../Layout'
 import { useEffect, useState } from 'react'
-import { EmployeeList, DialogCreateEmployee } from './components'
+import { CategoryList, DialogCreateCategory } from './components'
 import {
   Box,
   Typography,
+  Toolbar,
+  IconButton,
+  AppBar,
+  Avatar,
+  Drawer,
+  ListItem,
+  ListItemButton,
+  ListItemIcon,
+  TextField,
   Container,
   Button,
   Alert,
@@ -19,18 +28,18 @@ const Main = (props) => {
   const [openSuccessSnackbar, setOpenSuccessSnackbar] = useState(false)
   const [erroMessage, setErrorMessage] = useState('')
   const [successMessage, setSuccessMessage] = useState('')
-  const [employees, setEmployees] = useState([])
+  const [categories, setCategories] = useState([])
   const [open, setOpen] = useState(false)
 
   useEffect(() => {
-    fetch('http://localhost:3000/employees', {
+    fetch('http://localhost:3000/categories', {
       method: "GET"
     }).then((response) => {
       if (response.ok) {
         return response.json();
       }
     }).then((response) => {
-      setEmployees(response.users)
+      setCategories(response.categories)
     }).catch(error => console.log(error.message));
   }, [])
 
@@ -38,30 +47,30 @@ const Main = (props) => {
     <Layout user={props.user}>
       <Container>
         <Box mt={6} display='flex' alignItems='center' justifyContent='space-between'>
-          <Typography variant="h4">Funcionários</Typography>
+          <Typography variant="h4">Categorias</Typography>
           <Button
             variant='contained'
             onClick={() => { setOpen(true) }}
           >
-            Cadastrar Funcionário <AddIcon />
+            Cadastrar Categoria <AddIcon />
           </Button>
         </Box>
 
-        <EmployeeList
-          employees={employees}
-          setEmployees={setEmployees}
+        <CategoryList
+          categories={categories}
+          setCategories={setCategories}
           setOpenSuccessSnackbar={setOpenSuccessSnackbar}
           setSuccessMessage={setSuccessMessage}
           setOpenErrorSnackbar={setOpenErrorSnackbar}
           setErrorMessage={setErrorMessage}
         />
 
-        <DialogCreateEmployee
+        <DialogCreateCategory
           open={open}
           setOpen={setOpen}
           user={props.user}
-          employees={employees}
-          setEmployees={setEmployees}
+          categories={categories}
+          setCategories={setCategories}
           setOpenErrorSnackbar={setOpenErrorSnackbar}
           setOpenSuccessSnackbar={setOpenSuccessSnackbar}
           setErrorMessage={setErrorMessage}

@@ -15,7 +15,7 @@ class Users::Create
   private
 
   def define_company
-    return Company.find(params[:company_id]) if params[:company_id].present?
+    return Company.find(params[:user][:company_id]) if params[:user][:company_id].present?
 
     create_company
   end
@@ -41,9 +41,13 @@ class Users::Create
     {
       name: params[:user][:name],
       email: params[:user][:email],
-      password: params[:user][:password],
+      password: params[:user][:password] || generate_random_password,
       role: params[:user][:role],
       company: company
     }
+  end
+
+  def generate_random_password
+    SecureRandom.hex(6)
   end
 end

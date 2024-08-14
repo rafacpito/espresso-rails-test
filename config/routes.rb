@@ -18,9 +18,16 @@ Rails.application.routes.draw do
   post '/users/create', to: 'users#create'
   get '/employees/list', to: 'users#list'
   get '/employees', to: 'users#index_employees'
+  delete '/users/:id', to: 'users#destroy'
+  put '/users/:id', to: 'users#update'
 
   # expenses
   get '/expenses/list', to: 'expenses#list'
 
-  
+  # categories
+  get '/categories/list', to: 'categories#list'  
+  get '/categories', to: 'categories#index'
+  post '/categories/create', to: 'categories#create'
+  delete '/categories/:id', to: 'categories#destroy'
+  put '/categories/:id', to: 'categories#update'
 end
