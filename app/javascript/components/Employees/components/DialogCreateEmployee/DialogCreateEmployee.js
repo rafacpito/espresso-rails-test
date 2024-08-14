@@ -76,6 +76,8 @@ const DialogCreateEmployee = ({
     <Dialog
       open={open}
       onClose={() => { setOpen(false) }}
+      fullWidth
+      width="lg"
     >
       <DialogTitle>
         Cadastrar funcionário

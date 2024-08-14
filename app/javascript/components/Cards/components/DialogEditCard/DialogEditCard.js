@@ -16,16 +16,16 @@ import { useForm } from "react-hook-form"
 import schema from './schema'
 import { yupResolver } from '@hookform/resolvers/yup'
 
-const DialogEditEmployee = ({
+const DialogEditCard = ({
   open,
   setOpen,
-  employees,
-  setEmployees,
+  cards,
+  setCards,
   setOpenErrorSnackbar,
   setOpenSuccessSnackbar,
   setErrorMessage,
   setSuccessMessage,
-  employee,
+  card,
   index
 }) => {
   const {
@@ -38,19 +38,18 @@ const DialogEditEmployee = ({
   })
 
   useEffect(() => {
-    reset(employee);
-  }, [employee]);
+    reset(card);
+  }, [card]);
 
   const onSubmit = (data) => {
-    fetch(`http://localhost:3000/users/${employee.id}`, {
+    fetch(`http://localhost:3000/cards/${card.id}`, {
       method: "PUT",
       headers: {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        user: {
-          name: data.name,
-          email: data.email
+        card: {
+          user_email: data.email
         }
       })
     }).then(async response => {
@@ -58,13 +57,13 @@ const DialogEditEmployee = ({
         return response.text().then(text => { throw new Error(text) })
       }
       else {
-        setSuccessMessage('Funcionário editado com sucesso!')
+        setSuccessMessage('Funcionário associado ao cartão editado com sucesso!')
         setOpenSuccessSnackbar(true)
         return response.json()
       }
     }).then(response => {
-      employees.splice(index, 1, response.user)
-      setEmployees(employees)
+      cards.splice(index, 1, response.card)
+      setCards(cards)
       setOpen(false)
       reset()
       setTimeout(() => {
@@ -84,7 +83,7 @@ const DialogEditEmployee = ({
       width="lg"
     >
       <DialogTitle>
-        Editar funcionário
+        Associar funcionário
       </DialogTitle>
       <IconButton
         aria-label="close"
@@ -97,22 +96,8 @@ const DialogEditEmployee = ({
       >
         <CloseIcon />
       </IconButton>
-      <DialogContent>
+      <DialogContent sx={{ paddingTop: '0px' }}>
         <form onSubmit={handleSubmit(onSubmit)}>
-          <Typography variant='body1'>Informe os dados</Typography>
-          <TextField
-            margin='normal'
-            name='name'
-            label='Nome'
-            type='name'
-            id='name'
-            autoFocus
-            fullWidth
-            required
-            {...register("name")}
-            error={!!errors?.name}
-            helperText={errors?.name?.message}
-          />
           <TextField
             margin='normal'
             name='email'
@@ -137,4 +122,4 @@ const DialogEditEmployee = ({
   )
 }
 
-export default DialogEditEmployee
+export default DialogEditCard

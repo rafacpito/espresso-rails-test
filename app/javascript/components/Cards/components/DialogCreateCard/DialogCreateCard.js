@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useState } from 'react'
 import {
   Typography,
   Button,
@@ -7,50 +7,48 @@ import {
   Dialog,
   DialogContent,
   DialogTitle,
-  Box
+  Box,
+  Select,
+  MenuItem
 } from '@mui/material'
 import {
   Close as CloseIcon
 } from '@mui/icons-material'
-import { useForm } from "react-hook-form"
+import { useForm, Controller } from "react-hook-form"
 import schema from './schema'
 import { yupResolver } from '@hookform/resolvers/yup'
 
-const DialogEditEmployee = ({
+const DialogCreateCard = ({
   open,
   setOpen,
+  cards,
+  setCards,
   employees,
-  setEmployees,
   setOpenErrorSnackbar,
   setOpenSuccessSnackbar,
   setErrorMessage,
-  setSuccessMessage,
-  employee,
-  index
+  setSuccessMessage
 }) => {
   const {
     register,
+    control,
     handleSubmit,
     reset,
     formState: { errors }
   } = useForm({
-    resolver: yupResolver(schema)
+    resolver: yupResolver(schema),
   })
 
-  useEffect(() => {
-    reset(employee);
-  }, [employee]);
-
   const onSubmit = (data) => {
-    fetch(`http://localhost:3000/users/${employee.id}`, {
-      method: "PUT",
+    fetch('http://localhost:3000/cards/create', {
+      method: "POST",
       headers: {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        user: {
-          name: data.name,
-          email: data.email
+        card: {
+          last4: data.last4,
+          user_id: data.user_id,
         }
       })
     }).then(async response => {
@@ -58,13 +56,12 @@ const DialogEditEmployee = ({
         return response.text().then(text => { throw new Error(text) })
       }
       else {
-        setSuccessMessage('Funcionário editado com sucesso!')
+        setSuccessMessage('Cartão criado com sucesso!')
         setOpenSuccessSnackbar(true)
         return response.json()
       }
     }).then(response => {
-      employees.splice(index, 1, response.user)
-      setEmployees(employees)
+      setCards([...cards, response.card])
       setOpen(false)
       reset()
       setTimeout(() => {
@@ -84,7 +81,7 @@ const DialogEditEmployee = ({
       width="lg"
     >
       <DialogTitle>
-        Editar funcionário
+        Cadastrar cartão
       </DialogTitle>
       <IconButton
         aria-label="close"
@@ -102,33 +99,42 @@ const DialogEditEmployee = ({
           <Typography variant='body1'>Informe os dados</Typography>
           <TextField
             margin='normal'
-            name='name'
+            name='last4'
             label='Nome'
-            type='name'
-            id='name'
+            type='last4'
+            id='last4'
             autoFocus
             fullWidth
             required
-            {...register("name")}
-            error={!!errors?.name}
-            helperText={errors?.name?.message}
+            {...register("last4")}
+            error={!!errors?.last4}
+            helperText={errors?.last4?.message}
           />
-          <TextField
-            margin='normal'
-            name='email'
-            label='E-mail'
-            type='email'
-            id='email'
-            autoFocus
-            fullWidth
-            required
-            {...register("email")}
-            error={!!errors?.email}
-            helperText={errors?.email?.message}
+          <Controller
+            render={({ }) => (
+              <TextField
+                {...register('user_id')}
+                select // tell TextField to render select
+                label="Funcionário"
+                fullWidth
+                defaultValue={[]}
+                required
+              >
+                <MenuItem disabled value="">
+                  <em>Funcionário</em>
+                </MenuItem>
+                {employees.map((employee) =>
+                  <MenuItem key={employee.id} value={employee.id}>{employee.name}</MenuItem>
+                )}
+              </TextField>
+            )}
+            name='user_id'
+            control={control}
+            label='Funcionário'
           />
           <Box mt={3}>
             <Button variant='contained' type='submit' autoFocus>
-              Editar
+              Cadastrar
             </Button>
           </Box>
         </form>
@@ -137,4 +143,4 @@ const DialogEditEmployee = ({
   )
 }
 
-export default DialogEditEmployee
+export default DialogCreateCard

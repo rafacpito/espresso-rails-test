@@ -19,7 +19,6 @@ import { yupResolver } from '@hookform/resolvers/yup'
 const DialogCreateEmployee = ({
   open,
   setOpen,
-  user,
   categories,
   setCategories,
   setOpenErrorSnackbar,
