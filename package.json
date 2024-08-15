@@ -36,10 +36,10 @@
     "defaults"
   ],
   "engines": {
-    "node": "22.6.0",
-    "npm": "10.8.2"
+    "node": "20.9.0",
+    "npm": "10.1.0"
   },
-  "packageManager": "npm@10.7.0",
+  "packageManager": "npm@10.8.2",
   "devDependencies": {
     "@babel/core": "^7.25.2",
     "@babel/preset-env": "^7.25.3",
