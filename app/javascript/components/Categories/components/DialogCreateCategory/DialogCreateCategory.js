@@ -16,6 +16,7 @@ import { useForm } from "react-hook-form"
 import schema from './schema'
 import { yupResolver } from '@hookform/resolvers/yup'
 import axios from 'axios'
+import helpers from 'helpers'
 
 const DialogCreateEmployee = ({
   open,
@@ -39,7 +40,7 @@ const DialogCreateEmployee = ({
   const onSubmit = (data) => {
     const csrf = document.querySelector("meta[name='csrf-token']").getAttribute("content")
 
-    axios.post('http://localhost:3000/categories/create',
+    axios.post(`${helpers.functions.setUrl(process.env.NODE_ENV)}/categories/create`,
       JSON.stringify({
         category: {
           name: data.name,

@@ -12,6 +12,7 @@ import {
   Close as CloseIcon
 } from '@mui/icons-material'
 import axios from 'axios'
+import helpers from 'helpers'
 
 const DialogConfirmDeletion = ({
   open,
@@ -31,7 +32,7 @@ const DialogConfirmDeletion = ({
   const deleteCategory = () => {
     const csrf = document.querySelector("meta[name='csrf-token']").getAttribute("content")
 
-    axios.delete(`http://localhost:3000/categories/${category.id}`, {
+    axios.delete(`${helpers.functions.setUrl(process.env.NODE_ENV)}/categories/${category.id}`, {
       headers: {
         'X-CSRF-Token': csrf
       },

@@ -14,6 +14,7 @@ import {
   Add as AddIcon,
 } from '@mui/icons-material'
 import axios from 'axios'
+import helpers from 'helpers'
 
 const Main = (props) => {
   const [openErrorSnackbar, setOpenErrorSnackbar] = useState(false)
@@ -27,7 +28,7 @@ const Main = (props) => {
   const [refresh, setRefresh] = useState(0)
 
   useEffect(() => {
-    axios.get(`http://localhost:3000/employees?per_page=${rowsPerPage}&page=${page}`).then((response) => {
+    axios.get(`${helpers.functions.setUrl(process.env.NODE_ENV)}/employees?per_page=${rowsPerPage}&page=${page}`).then((response) => {
       if (response.status == 200) {
         setEmployees(response.data.users)
       }

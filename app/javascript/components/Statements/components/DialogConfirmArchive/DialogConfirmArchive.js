@@ -12,6 +12,7 @@ import {
   Close as CloseIcon
 } from '@mui/icons-material'
 import axios from 'axios'
+import helpers from 'helpers'
 
 const DialogConfirmArchive = ({
   open,
@@ -31,7 +32,7 @@ const DialogConfirmArchive = ({
   const archiveStatement = () => {
     const csrf = document.querySelector("meta[name='csrf-token']").getAttribute("content")
 
-    axios.delete(`http://localhost:3000/statements/${statement.id}`, {
+    axios.delete(`${helpers.functions.setUrl(process.env.NODE_ENV)}/statements/${statement.id}`, {
       headers: {
         'X-CSRF-Token': csrf
       },

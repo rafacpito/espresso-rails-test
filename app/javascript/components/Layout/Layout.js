@@ -24,6 +24,7 @@ import {
 } from '@mui/icons-material'
 import { styles } from './styles.js'
 import axios from 'axios'
+import helpers from 'helpers'
 
 const Layout = ({ children, user }) => {
   const [open, setOpen] = useState(false)
@@ -31,7 +32,7 @@ const Layout = ({ children, user }) => {
   const logout = () => {
     const csrf = document.querySelector("meta[name='csrf-token']").getAttribute("content")
 
-    axios.delete('http://localhost:3000/logout', {
+    axios.delete(`${helpers.functions.setUrl(process.env.NODE_ENV)}/logout`, {
       headers: {
         'X-CSRF-Token': csrf
       },

@@ -43,7 +43,7 @@ const CardList = ({
     setOpenDeletion(true)
   }
 
-  const openDialogEditCard = (card, index) => {
+  const openDialogEditCard = (card) => {
     setEditCard(card)
     setOpenEdit(true)
   }

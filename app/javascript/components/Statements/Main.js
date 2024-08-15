@@ -10,6 +10,7 @@ import {
   Snackbar
 } from '@mui/material'
 import axios from 'axios'
+import helpers from 'helpers'
 
 const Main = (props) => {
   const [openErrorSnackbar, setOpenErrorSnackbar] = useState(false)
@@ -25,20 +26,20 @@ const Main = (props) => {
 
   useEffect(() => {
     if (currentTabIndex === 0) {
-      axios.get(`http://localhost:3000/statements?per_page=${rowsPerPage}&page=${page}`).then((response) => {
+      axios.get(`${helpers.functions.setUrl(process.env.NODE_ENV)}/statements?per_page=${rowsPerPage}&page=${page}`).then((response) => {
         if (response.status == 200) {
           setStatements(response.data.statements)
         }
       }).catch(error => console.log(error.message))
     } else {
-      axios.get(`http://localhost:3000/statements/archived?per_page=${rowsPerPage}&page=${page}`).then((response) => {
+      axios.get(`${helpers.functions.setUrl(process.env.NODE_ENV)}/statements/archived?per_page=${rowsPerPage}&page=${page}`).then((response) => {
         if (response.status == 200) {
           setStatements(response.data.statements)
         }
       }).catch(error => console.log(error.message))
     }
 
-    axios.get('http://localhost:3000/categories').then((response) => {
+    axios.get(`${helpers.functions.setUrl(process.env.NODE_ENV)}/categories`).then((response) => {
       if (response.status == 200) {
         setCategories(response.data.categories)
       }

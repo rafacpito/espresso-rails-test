@@ -14,6 +14,7 @@ import { styles } from './styles.js'
 import schema from './schema'
 import { yupResolver } from '@hookform/resolvers/yup'
 import axios from 'axios'
+import helpers from 'helpers'
 
 const SignUp = () => {
   const [openErrorSnackbar, setOpenErrorSnackbar] = useState(false)
@@ -50,7 +51,7 @@ const SignUp = () => {
   const onSubmit = (data) => {
     const csrf = document.querySelector("meta[name='csrf-token']").getAttribute("content")
 
-    axios.post('http://localhost:3000/users/create',
+    axios.post(`${helpers.functions.setUrl(process.env.NODE_ENV)}/users/create`,
       JSON.stringify({
         user: {
           name: data.name,

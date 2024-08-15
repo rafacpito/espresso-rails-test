@@ -14,6 +14,7 @@ import { styles } from './styles.js'
 import schema from './schema'
 import { yupResolver } from '@hookform/resolvers/yup'
 import axios from 'axios'
+import helpers from 'helpers'
 
 const Main = () => {
   const [open, setOpen] = useState(false)
@@ -29,7 +30,7 @@ const Main = () => {
   const onSubmit = (data) => {
     const csrf = document.querySelector("meta[name='csrf-token']").getAttribute("content")
 
-    axios.post('http://localhost:3000/login',
+    axios.post(`${helpers.functions.setUrl(process.env.NODE_ENV)}/login`,
       JSON.stringify({
         user: {
           email: data.email,

@@ -16,6 +16,7 @@ import { useForm } from "react-hook-form"
 import schema from './schema'
 import { yupResolver } from '@hookform/resolvers/yup'
 import axios from 'axios'
+import helpers from 'helpers'
 
 const DialogEditCategory = ({
   open,
@@ -44,7 +45,7 @@ const DialogEditCategory = ({
   const onSubmit = (data) => {
     const csrf = document.querySelector("meta[name='csrf-token']").getAttribute("content")
 
-    axios.put(`http://localhost:3000/categories/${category.id}`,
+    axios.put(`${helpers.functions.setUrl(process.env.NODE_ENV)}/categories/${category.id}`,
       JSON.stringify({
         category: {
           name: data.name

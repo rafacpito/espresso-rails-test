@@ -1,4 +1,5 @@
 class StatementsController < ApplicationController
+  protect_from_forgery with: :null_session, only: [:create]
   load_and_authorize_resource except: [:create]
   before_action :authenticate_user!, except: [:create]
 

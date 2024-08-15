@@ -17,6 +17,7 @@ import axios from 'axios'
 import { useForm, Controller } from "react-hook-form"
 import schema from './schema'
 import { yupResolver } from '@hookform/resolvers/yup'
+import helpers from 'helpers'
 
 const DialogCreateCard = ({
   open,
@@ -42,7 +43,7 @@ const DialogCreateCard = ({
   const onSubmit = (data) => {
     const csrf = document.querySelector("meta[name='csrf-token']").getAttribute("content")
 
-    axios.post('http://localhost:3000/cards/create',
+    axios.post(`${helpers.functions.setUrl(process.env.NODE_ENV)}/cards/create`,
       JSON.stringify({
         card: {
           last4: data.last4,

@@ -12,6 +12,7 @@ import axios from 'axios'
 import {
   Close as CloseIcon
 } from '@mui/icons-material'
+import helpers from 'helpers'
 
 const DialogConfirmDeletion = ({
   open,
@@ -31,7 +32,7 @@ const DialogConfirmDeletion = ({
   const deleteCard = () => {
     const csrf = document.querySelector("meta[name='csrf-token']").getAttribute("content")
 
-    axios.delete(`http://localhost:3000/cards/${card.id}`, {
+    axios.delete(`${helpers.functions.setUrl(process.env.NODE_ENV)}/cards/${card.id}`, {
       headers: {
         'X-CSRF-Token': csrf
       },

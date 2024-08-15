@@ -17,6 +17,7 @@ import axios from 'axios'
 import { useForm } from "react-hook-form"
 import schema from './schema'
 import { yupResolver } from '@hookform/resolvers/yup'
+import helpers from 'helpers'
 
 const DialogEditCard = ({
   open,
@@ -45,7 +46,7 @@ const DialogEditCard = ({
   const onSubmit = (data) => {
     const csrf = document.querySelector("meta[name='csrf-token']").getAttribute("content")
 
-    axios.put(`http://localhost:3000/cards/${card.id}`,
+    axios.put(`${helpers.functions.setUrl(process.env.NODE_ENV)}/cards/${card.id}`,
       JSON.stringify({
         card: {
           user_email: data.email

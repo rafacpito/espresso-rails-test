@@ -18,6 +18,7 @@ import {
 import { useForm, Controller } from "react-hook-form"
 import schema from './schema'
 import { yupResolver } from '@hookform/resolvers/yup'
+import helpers from 'helpers'
 
 const DialogEditStatement = ({
   open,
@@ -35,7 +36,7 @@ const DialogEditStatement = ({
   const [files, setFiles] = useState([])
 
   useEffect(() => {
-    setFileName(`${statement?.attachment?.file?.original_filename}.${statement?.attachment?.file?.original_extension}`)
+    if (statement.attachment != null) setFileName(`${statement?.attachment?.file?.original_filename}.${statement?.attachment?.file?.original_extension}`)
   }, [statement])
 
   const {
@@ -57,18 +58,19 @@ const DialogEditStatement = ({
     const formData = new FormData()
     formData.append('statement[category_id]', data.category_id)
     formData.append('statement[file]', files[0])
-    axios.put(`http://localhost:3000/statements/${statement.id}`, formData, {
+    axios.put(`${helpers.functions.setUrl(process.env.NODE_ENV)}/statements/${statement.id}`, formData, {
       headers: {
         'Content-Type': 'multipart/form-data',
         'X-CSRF-Token': csrf
       },
     }).then(response => {
       if (response.status == 200) {
+        reset()
+        setFileName('')
         setSuccessMessage('Comprovante vinculado a despesa e categoria definida.')
         setOpenSuccessSnackbar(true)
         setRefresh(refresh + 1)
         setOpen(false)
-        reset()
         setTimeout(() => {
           setOpenSuccessSnackbar(false)
         }, "3000")
@@ -82,7 +84,10 @@ const DialogEditStatement = ({
   return (
     <Dialog
       open={open}
-      onClose={() => { setOpen(false) }}
+      onClose={() => {
+        setFileName('')
+        setOpen(false)
+      }}
       fullWidth
       width="lg"
     >
@@ -91,7 +96,10 @@ const DialogEditStatement = ({
       </DialogTitle>
       <IconButton
         aria-label="close"
-        onClick={() => { setOpen(false) }}
+        onClick={() => {
+          setFileName('')
+          setOpen(false)
+        }}
         sx={{
           position: 'absolute',
           right: 8,
