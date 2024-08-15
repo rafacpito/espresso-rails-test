@@ -7,6 +7,7 @@ class UserMailer < ApplicationMailer
   #
   def welcome_message
     @user = params[:user]
+    @password = params[:password]
     mail to: "couto1105@gmail.com", subject: 'Bem vindo ao Espresso! Aqui estão suas credenciais de acesso'
   end
 end

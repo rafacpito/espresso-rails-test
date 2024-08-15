@@ -48,6 +48,8 @@ const SignUp = () => {
   }, [cnpjValue])
 
   const onSubmit = (data) => {
+    const csrf = document.querySelector("meta[name='csrf-token']").getAttribute("content")
+
     axios.post('http://localhost:3000/users/create',
       JSON.stringify({
         user: {
@@ -62,7 +64,10 @@ const SignUp = () => {
         }
       }),
       {
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRF-Token': csrf
+        },
       }).then(response => {
         if (response.status == 201) {
           setOpenSuccessSnackbar(true)

@@ -29,7 +29,13 @@ const DialogConfirmDeletion = ({
   setErrorMessage
 }) => {
   const deleteCard = () => {
-    axios.delete(`http://localhost:3000/cards/${card.id}`).then((response) => {
+    const csrf = document.querySelector("meta[name='csrf-token']").getAttribute("content")
+
+    axios.delete(`http://localhost:3000/cards/${card.id}`, {
+      headers: {
+        'X-CSRF-Token': csrf
+      },
+    }).then((response) => {
       if (response.status == 200) {
         if (cards.length == 1 & page > 1) setPage(page - 1)
         setRefresh(refresh + 1)

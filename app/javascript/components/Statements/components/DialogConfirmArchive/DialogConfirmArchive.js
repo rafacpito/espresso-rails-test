@@ -29,7 +29,13 @@ const DialogConfirmArchive = ({
   setErrorMessage
 }) => {
   const archiveStatement = () => {
-    axios.delete(`http://localhost:3000/statements/${statement.id}`).then((response) => {
+    const csrf = document.querySelector("meta[name='csrf-token']").getAttribute("content")
+
+    axios.delete(`http://localhost:3000/statements/${statement.id}`, {
+      headers: {
+        'X-CSRF-Token': csrf
+      },
+    }).then((response) => {
       if (response.status == 200) {
         if (statements.length == 1 & page > 1) setPage(page - 1)
         setRefresh(refresh + 1)

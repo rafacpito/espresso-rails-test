@@ -42,6 +42,8 @@ const DialogEditCategory = ({
   }, [category]);
 
   const onSubmit = (data) => {
+    const csrf = document.querySelector("meta[name='csrf-token']").getAttribute("content")
+
     axios.put(`http://localhost:3000/categories/${category.id}`,
       JSON.stringify({
         category: {
@@ -49,7 +51,10 @@ const DialogEditCategory = ({
         }
       }),
       {
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRF-Token': csrf
+        },
       }).then(response => {
         if (response.status == 200) {
           setSuccessMessage('Categoria editada com sucesso!')

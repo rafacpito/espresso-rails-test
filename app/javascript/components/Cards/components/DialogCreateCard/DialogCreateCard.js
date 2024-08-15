@@ -40,6 +40,8 @@ const DialogCreateCard = ({
   })
 
   const onSubmit = (data) => {
+    const csrf = document.querySelector("meta[name='csrf-token']").getAttribute("content")
+
     axios.post('http://localhost:3000/cards/create',
       JSON.stringify({
         card: {
@@ -48,7 +50,10 @@ const DialogCreateCard = ({
         }
       }),
       {
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRF-Token': csrf
+        },
       }).then(response => {
         if (response.status == 201) {
           setSuccessMessage('Cartão criado com sucesso!')

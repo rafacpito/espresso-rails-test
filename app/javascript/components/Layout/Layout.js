@@ -29,7 +29,13 @@ const Layout = ({ children, user }) => {
   const [open, setOpen] = useState(false)
 
   const logout = () => {
-    axios.delete('http://localhost:3000/logout').then((response) => {
+    const csrf = document.querySelector("meta[name='csrf-token']").getAttribute("content")
+
+    axios.delete('http://localhost:3000/logout', {
+      headers: {
+        'X-CSRF-Token': csrf
+      },
+    }).then((response) => {
       if (response.status == 200) {
         window.location.href = '/'
       }

@@ -42,6 +42,8 @@ const DialogEditEmployee = ({
   }, [employee]);
 
   const onSubmit = (data) => {
+    const csrf = document.querySelector("meta[name='csrf-token']").getAttribute("content")
+
     axios.put(`http://localhost:3000/users/${employee.id}`,
       JSON.stringify({
         user: {
@@ -50,7 +52,10 @@ const DialogEditEmployee = ({
         }
       }),
       {
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRF-Token': csrf
+        },
       }).then(response => {
         if (response.status == 200) {
           setSuccessMessage('Funcionário editado com sucesso!')

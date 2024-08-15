@@ -43,6 +43,8 @@ const DialogEditCard = ({
   }, [card]);
 
   const onSubmit = (data) => {
+    const csrf = document.querySelector("meta[name='csrf-token']").getAttribute("content")
+
     axios.put(`http://localhost:3000/cards/${card.id}`,
       JSON.stringify({
         card: {
@@ -50,7 +52,10 @@ const DialogEditCard = ({
         }
       }),
       {
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRF-Token': csrf
+        },
       }).then(response => {
         if (response.status == 200) {
           setSuccessMessage('Funcionário associado ao cartão editado com sucesso!')

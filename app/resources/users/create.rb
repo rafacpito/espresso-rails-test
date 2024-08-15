@@ -1,5 +1,5 @@
 class Users::Create
-  attr_accessor :params, :company
+  attr_accessor :params, :company, :password
 
   def initialize(params)
     @params = params
@@ -8,7 +8,9 @@ class Users::Create
   def execute
     ActiveRecord::Base.transaction do
       @company = define_company
-      create_user
+      user = create_user
+      send_email(user)
+      user
     end
   end
 
@@ -48,6 +50,10 @@ class Users::Create
   end
 
   def generate_random_password
-    SecureRandom.hex(6)
+    @password = SecureRandom.hex(6)
+  end
+
+  def send_email(user)
+    UserMailer.with(user: user, password: password).welcome_message.deliver_now
   end
 end

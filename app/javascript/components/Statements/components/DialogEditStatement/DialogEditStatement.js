@@ -52,11 +52,16 @@ const DialogEditStatement = ({
   })
 
   const onSubmit = (data) => {
+    const csrf = document.querySelector("meta[name='csrf-token']").getAttribute("content")
+
     const formData = new FormData()
     formData.append('statement[category_id]', data.category_id)
     formData.append('statement[file]', files[0])
     axios.put(`http://localhost:3000/statements/${statement.id}`, formData, {
-      headers: { 'Content-Type': 'multipart/form-data' },
+      headers: {
+        'Content-Type': 'multipart/form-data',
+        'X-CSRF-Token': csrf
+      },
     }).then(response => {
       if (response.status == 200) {
         setSuccessMessage('Comprovante vinculado a despesa e categoria definida.')
