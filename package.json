@@ -51,6 +51,7 @@
     "jest-environment-jsdom": "^29.7.0",
     "webpack-dev-server": "^4.15.2"
   },
+  "build": "cd client && npm run build",
   "scripts": {
     "test": "jest --coverage"
   },
