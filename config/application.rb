@@ -35,6 +35,7 @@ module EspressoRailsTest
     config.i18n.default_locale = :"pt-BR"
     config.generators.system_tests = nil
     config.time_zone = 'Brasilia'
+    config.action_controller.default_protect_from_forgery = true
 
     config.assets.initialize_on_precompile = false
 
