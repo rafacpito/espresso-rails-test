@@ -3,8 +3,7 @@
 class ApplicationController < ActionController::Base
   include ErrorsHandler::Handler
 
-  protect_from_forgery unless: -> { request.format.json? }
-  skip_before_action :verify_authenticity_token
+  skip_before_action :verify_authenticity_token, raise: false
   before_action :configure_permitted_parameters, if: :devise_controller?
 
   protected
