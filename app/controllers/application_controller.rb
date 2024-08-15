@@ -22,6 +22,19 @@ class ApplicationController < ActionController::Base
   end
 
   def check_signed_in
-    redirect_to expenses_list_path if signed_in?
+    redirect_to statements_list_path if signed_in?
+  end
+
+  def pagination(object)
+    {
+      current_page: object.current_page,
+      per_page: object.per_page(params),
+      total_pages: object.total_pages,
+      total_count: object.total_count
+    }
+  end
+
+  def current_ability
+    @current_ability ||= Ability.new(current_user)
   end
 end

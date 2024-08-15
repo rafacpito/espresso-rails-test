@@ -2,6 +2,7 @@ import React from 'react'
 import Layout from '../Layout'
 import { useEffect, useState } from 'react'
 import { CardList, DialogCreateCard } from './components'
+import axios from 'axios'
 import {
   Box,
   Typography,
@@ -22,28 +23,23 @@ const Main = (props) => {
   const [cards, setCards] = useState([])
   const [open, setOpen] = useState(false)
   const [employees, setEmployees] = useState([])
+  const [page, setPage] = useState(1)
+  const [rowsPerPage, setRowsPerPage] = useState(10)
+  const [refresh, setRefresh] = useState(0)
 
   useEffect(() => {
-    fetch('http://localhost:3000/cards', {
-      method: "GET"
-    }).then((response) => {
-      if (response.ok) {
-        return response.json();
+    axios.get(`http://localhost:3000/cards?per_page=${rowsPerPage}&page=${page}`).then((response) => {
+      if (response.status == 200) {
+        setCards(response.data.cards)
       }
-    }).then((response) => {
-      setCards(response.cards)
     }).catch(error => console.log(error.message))
 
-    fetch('http://localhost:3000/employees', {
-      method: "GET"
-    }).then((response) => {
-      if (response.ok) {
-        return response.json();
+    axios.get('http://localhost:3000/employees').then((response) => {
+      if (response.status == 200) {
+        setEmployees(response.data.users)
       }
-    }).then((response) => {
-      setEmployees(response.users)
     }).catch(error => console.log(error.message))
-  }, [])
+  }, [rowsPerPage, page, refresh])
 
   return (
     <Layout user={props.user}>
@@ -61,6 +57,12 @@ const Main = (props) => {
         <CardList
           cards={cards}
           setCards={setCards}
+          page={page}
+          setPage={setPage}
+          rowsPerPage={rowsPerPage}
+          setRowsPerPage={setRowsPerPage}
+          refresh={refresh}
+          setRefresh={setRefresh}
           setOpenSuccessSnackbar={setOpenSuccessSnackbar}
           setSuccessMessage={setSuccessMessage}
           setOpenErrorSnackbar={setOpenErrorSnackbar}
@@ -70,10 +72,9 @@ const Main = (props) => {
         <DialogCreateCard
           open={open}
           setOpen={setOpen}
-          user={props.user}
-          cards={cards}
-          setCards={setCards}
           employees={employees}
+          refresh={refresh}
+          setRefresh={setRefresh}
           setOpenErrorSnackbar={setOpenErrorSnackbar}
           setOpenSuccessSnackbar={setOpenSuccessSnackbar}
           setErrorMessage={setErrorMessage}

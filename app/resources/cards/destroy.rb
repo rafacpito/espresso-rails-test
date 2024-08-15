@@ -6,6 +6,9 @@ class Cards::Destroy
   end
 
   def execute
-    Card.find(id).destroy
+    card = Card.find(id)
+    raise CustomException.new('Impossível deletar um cartão com despesas vinculadas.') if card.statements.present?
+
+    card.destroy
   end
 end

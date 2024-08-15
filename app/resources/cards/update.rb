@@ -1,12 +1,13 @@
 class Cards::Update
-  attr_accessor :params
+  attr_accessor :id, :params
 
-  def initialize(params)
+  def initialize(id, params)
+    @id = id
     @params = params
   end
 
   def execute
-    card = Card.find(params[:id])
+    card = Card.find(id)
     card.update!(user: find_user)
     card
   end
@@ -14,6 +15,6 @@ class Cards::Update
   private
 
   def find_user
-    User.find_by!(email: params[:card][:user_email], role: 2)
+    User.find_by!(email: params[:user_email], role: 2)
   end
 end

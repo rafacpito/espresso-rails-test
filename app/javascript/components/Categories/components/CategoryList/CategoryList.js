@@ -6,6 +6,7 @@ import {
   TableCell,
   TableRow,
   TableBody,
+  TablePagination,
   Avatar
 } from '@mui/material'
 import {
@@ -20,6 +21,12 @@ import { DialogConfirmDeletion, DialogEditCategory } from '../'
 const CategoryList = ({
   categories,
   setCategories,
+  page,
+  setPage,
+  rowsPerPage,
+  setRowsPerPage,
+  refresh,
+  setRefresh,
   setOpenSuccessSnackbar,
   setSuccessMessage,
   setOpenErrorSnackbar,
@@ -29,7 +36,6 @@ const CategoryList = ({
   const [deleteIndex, setDeleteIndex] = useState()
   const [deleteCategory, setDeleteCategory] = useState({})
   const [openEdit, setOpenEdit] = useState(false)
-  const [editIndex, setEditIndex] = useState()
   const [editCategory, setEditCategory] = useState({})
 
   const openDialogConfirmDeletion = (category, index) => {
@@ -38,10 +44,18 @@ const CategoryList = ({
     setOpenDeletion(true)
   }
 
-  const openDialogEditEmployee = (category, index) => {
+  const openDialogEditCategory = (category, index) => {
     setEditCategory(category)
-    setEditIndex(index)
     setOpenEdit(true)
+  }
+
+  const handleChangePage = (newPage) => {
+    setPage(newPage + 1);
+  }
+
+  const handleChangeRowsPerPage = (value) => {
+    setRowsPerPage(parseInt(value, 10))
+    setPage(1)
   }
 
   return (
@@ -49,7 +63,6 @@ const CategoryList = ({
       <Table sx={{ minWidth: 650 }} aria-label="simple table">
         <TableBody>
           {categories?.length === 0 ? (
-
             <TableRow>
               <TableCell>Até o momento, não há categorias cadastradas.</TableCell>
             </TableRow>
@@ -77,7 +90,7 @@ const CategoryList = ({
                   variant='outlined'
                   size="small"
                   onClick={() =>
-                    openDialogEditEmployee(category, index)
+                    openDialogEditCategory(category, index)
                   }
                   style={styles.editButton}
                 >
@@ -105,23 +118,37 @@ const CategoryList = ({
           ))}
         </TableBody>
       </Table>
+      <TablePagination
+        rowsPerPageOptions={[5, 10, 25]}
+        labelRowsPerPage={"Quantidade por página:"}
+        component="div"
+        count={100}
+        page={page - 1}
+        onPageChange={(e, number) => { handleChangePage(number) }}
+        rowsPerPage={rowsPerPage}
+        onRowsPerPageChange={(e) => { handleChangeRowsPerPage(e.target.value) }}
+      />
       <DialogConfirmDeletion
         open={openDeletion}
         setOpen={setOpenDeletion}
         category={deleteCategory}
         index={deleteIndex}
-        setCategories={setCategories}
         categories={categories}
+        page={page}
+        setPage={setPage}
+        refresh={refresh}
+        setRefresh={setRefresh}
         setOpenSuccessSnackbar={setOpenSuccessSnackbar}
         setSuccessMessage={setSuccessMessage}
+        setOpenErrorSnackbar={setOpenErrorSnackbar}
+        setErrorMessage={setErrorMessage}
       />
       <DialogEditCategory
         open={openEdit}
         setOpen={setOpenEdit}
         category={editCategory}
-        index={editIndex}
-        setCategories={setCategories}
-        categories={categories}
+        refresh={refresh}
+        setRefresh={setRefresh}
         setOpenSuccessSnackbar={setOpenSuccessSnackbar}
         setSuccessMessage={setSuccessMessage}
         setOpenErrorSnackbar={setOpenErrorSnackbar}

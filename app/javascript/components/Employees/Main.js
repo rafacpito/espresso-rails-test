@@ -13,6 +13,7 @@ import {
 import {
   Add as AddIcon,
 } from '@mui/icons-material'
+import axios from 'axios'
 
 const Main = (props) => {
   const [openErrorSnackbar, setOpenErrorSnackbar] = useState(false)
@@ -21,18 +22,17 @@ const Main = (props) => {
   const [successMessage, setSuccessMessage] = useState('')
   const [employees, setEmployees] = useState([])
   const [open, setOpen] = useState(false)
+  const [page, setPage] = useState(1)
+  const [rowsPerPage, setRowsPerPage] = useState(10)
+  const [refresh, setRefresh] = useState(0)
 
   useEffect(() => {
-    fetch('http://localhost:3000/employees', {
-      method: "GET"
-    }).then((response) => {
-      if (response.ok) {
-        return response.json();
+    axios.get(`http://localhost:3000/employees?per_page=${rowsPerPage}&page=${page}`).then((response) => {
+      if (response.status == 200) {
+        setEmployees(response.data.users)
       }
-    }).then((response) => {
-      setEmployees(response.users)
-    }).catch(error => console.log(error.message));
-  }, [])
+    }).catch(error => console.log(error.message))
+  }, [rowsPerPage, page, refresh])
 
   return (
     <Layout user={props.user}>
@@ -50,6 +50,12 @@ const Main = (props) => {
         <EmployeeList
           employees={employees}
           setEmployees={setEmployees}
+          page={page}
+          setPage={setPage}
+          rowsPerPage={rowsPerPage}
+          setRowsPerPage={setRowsPerPage}
+          refresh={refresh}
+          setRefresh={setRefresh}
           setOpenSuccessSnackbar={setOpenSuccessSnackbar}
           setSuccessMessage={setSuccessMessage}
           setOpenErrorSnackbar={setOpenErrorSnackbar}
@@ -60,8 +66,8 @@ const Main = (props) => {
           open={open}
           setOpen={setOpen}
           user={props.user}
-          employees={employees}
-          setEmployees={setEmployees}
+          refresh={refresh}
+          setRefresh={setRefresh}
           setOpenErrorSnackbar={setOpenErrorSnackbar}
           setOpenSuccessSnackbar={setOpenSuccessSnackbar}
           setErrorMessage={setErrorMessage}

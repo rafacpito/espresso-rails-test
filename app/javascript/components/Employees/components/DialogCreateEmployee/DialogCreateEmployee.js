@@ -15,13 +15,14 @@ import {
 import { useForm } from "react-hook-form"
 import schema from './schema'
 import { yupResolver } from '@hookform/resolvers/yup'
+import axios from 'axios'
 
 const DialogCreateEmployee = ({
   open,
   setOpen,
   user,
-  employees,
-  setEmployees,
+  refresh,
+  setRefresh,
   setOpenErrorSnackbar,
   setOpenSuccessSnackbar,
   setErrorMessage,
@@ -37,39 +38,32 @@ const DialogCreateEmployee = ({
   })
 
   const onSubmit = (data) => {
-    fetch('http://localhost:3000/users/create', {
-      method: "POST",
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
+    axios.post('http://localhost:3000/users/create',
+      JSON.stringify({
         user: {
           name: data.name,
           email: data.email,
           role: 2,
           company_id: user.company_id
         }
+      }),
+      {
+        headers: { 'Content-Type': 'application/json' },
+      }).then(response => {
+        if (response.status == 201) {
+          setSuccessMessage('Funcionário criado com sucesso!')
+          setOpenSuccessSnackbar(true)
+          setRefresh(refresh + 1)
+          setOpen(false)
+          reset()
+          setTimeout(() => {
+            setOpenSuccessSnackbar(false)
+          }, "3000")
+        }
+      }).catch(error => {
+        setErrorMessage(error.response.data.error.message)
+        setOpenErrorSnackbar(true)
       })
-    }).then(async response => {
-      if (!response.ok) {
-        return response.text().then(text => { throw new Error(text) })
-      }
-      else {
-        setSuccessMessage('Funcionário criado com sucesso!')
-        setOpenSuccessSnackbar(true)
-        return response.json()
-      }
-    }).then(response => {
-      setEmployees([...employees, response.user])
-      setOpen(false)
-      reset()
-      setTimeout(() => {
-        setOpenSuccessSnackbar(false)
-      }, "3000")
-    }).catch(error => {
-      setErrorMessage(JSON.parse(error.message).error.message)
-      setOpenErrorSnackbar(true)
-    })
   }
 
   return (

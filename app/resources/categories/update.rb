@@ -1,14 +1,14 @@
 class Categories::Update
-  attr_accessor :params, :current_user
+  attr_accessor :id, :params
 
-  def initialize(params, current_user)
+  def initialize(id, params)
+    @id = id
     @params = params
-    @current_user = current_user
   end
 
   def execute
-    category = Category.where(id: params[:id], company_id: current_user.company_id).first
-    category.update!(name: params[:category][:name])
+    category = Category.find(id)
+    category.update!(name: params[:name])
     category
   end
 end

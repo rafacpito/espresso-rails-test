@@ -15,12 +15,13 @@ import {
 import { useForm } from "react-hook-form"
 import schema from './schema'
 import { yupResolver } from '@hookform/resolvers/yup'
+import axios from 'axios'
 
 const DialogCreateEmployee = ({
   open,
   setOpen,
-  categories,
-  setCategories,
+  refresh,
+  setRefresh,
   setOpenErrorSnackbar,
   setOpenSuccessSnackbar,
   setErrorMessage,
@@ -36,36 +37,29 @@ const DialogCreateEmployee = ({
   })
 
   const onSubmit = (data) => {
-    fetch('http://localhost:3000/categories/create', {
-      method: "POST",
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
+    axios.post('http://localhost:3000/categories/create',
+      JSON.stringify({
         category: {
           name: data.name,
         }
+      }),
+      {
+        headers: { 'Content-Type': 'application/json' },
+      }).then(response => {
+        if (response.status == 201) {
+          setSuccessMessage('Categoria criado com sucesso!')
+          setOpenSuccessSnackbar(true)
+          setRefresh(refresh + 1)
+          setOpen(false)
+          reset()
+          setTimeout(() => {
+            setOpenSuccessSnackbar(false)
+          }, "3000")
+        }
+      }).catch(error => {
+        setErrorMessage(error.response.data.error.message)
+        setOpenErrorSnackbar(true)
       })
-    }).then(async response => {
-      if (!response.ok) {
-        return response.text().then(text => { throw new Error(text) })
-      }
-      else {
-        setSuccessMessage('Categoria criada com sucesso!')
-        setOpenSuccessSnackbar(true)
-        return response.json()
-      }
-    }).then(response => {
-      setCategories([...categories, response.category])
-      setOpen(false)
-      reset()
-      setTimeout(() => {
-        setOpenSuccessSnackbar(false)
-      }, "3000")
-    }).catch(error => {
-      setErrorMessage(JSON.parse(error.message).error.message)
-      setOpenErrorSnackbar(true)
-    })
   }
 
   return (

@@ -1,0 +1,10 @@
+
+production:
+  cloud_name: 'dasvuvrbc'
+  api_key: '173571713688462'
+  api_secret: '6SXQyQR3Lx4Hs9EH0BaN974rtkA'
+
+development:  
+  cloud_name: 'dasvuvrbc'
+  api_key: '173571713688462'
+  api_secret: '6SXQyQR3Lx4Hs9EH0BaN974rtkA'

@@ -15,7 +15,7 @@ class Users::Create
   private
 
   def define_company
-    return Company.find(params[:user][:company_id]) if params[:user][:company_id].present?
+    return Company.find(params[:company_id]) if params[:company_id].present?
 
     create_company
   end
@@ -27,8 +27,8 @@ class Users::Create
   def mount_params_to_company
     {
       company: {
-        name: params[:user][:companyName],
-        cnpj: params[:user][:cnpj]
+        name: params[:company][:name],
+        cnpj: params[:company][:cnpj]
       }
     }
   end
@@ -39,10 +39,10 @@ class Users::Create
 
   def mount_params
     {
-      name: params[:user][:name],
-      email: params[:user][:email],
-      password: params[:user][:password] || generate_random_password,
-      role: params[:user][:role],
+      name: params[:name],
+      email: params[:email],
+      password: params[:password] || generate_random_password,
+      role: params[:role],
       company: company
     }
   end

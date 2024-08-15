@@ -6,7 +6,8 @@ import {
   Table,
   TableCell,
   TableRow,
-  TableBody
+  TableBody,
+  TablePagination
 } from '@mui/material'
 import {
   Edit as EditIcon,
@@ -19,6 +20,12 @@ import { DialogConfirmDeletion, DialogEditEmployee } from '../'
 const EmployeeList = ({
   employees,
   setEmployees,
+  page,
+  setPage,
+  rowsPerPage,
+  setRowsPerPage,
+  refresh,
+  setRefresh,
   setOpenSuccessSnackbar,
   setSuccessMessage,
   setOpenErrorSnackbar,
@@ -35,6 +42,7 @@ const EmployeeList = ({
     let splitName = employee.name.split(' ')
 
     if (splitName.length == 1) {
+      if (splitName[0].length == 1) return splitName[0][0].toUpperCase()
       return `${splitName[0][0]}${splitName[0][1]}`.toUpperCase()
     }
 
@@ -51,6 +59,15 @@ const EmployeeList = ({
     setEditEmployee(employee)
     setEditIndex(index)
     setOpenEdit(true)
+  }
+
+  const handleChangePage = (newPage) => {
+    setPage(newPage + 1);
+  }
+
+  const handleChangeRowsPerPage = (value) => {
+    setRowsPerPage(parseInt(value, 10))
+    setPage(1)
   }
 
   return (
@@ -115,23 +132,37 @@ const EmployeeList = ({
           ))}
         </TableBody>
       </Table>
+      <TablePagination
+        rowsPerPageOptions={[5, 10, 25]}
+        labelRowsPerPage={"Quantidade por página:"}
+        component="div"
+        count={100}
+        page={page - 1}
+        onPageChange={(e, number) => { handleChangePage(number) }}
+        rowsPerPage={rowsPerPage}
+        onRowsPerPageChange={(e) => { handleChangeRowsPerPage(e.target.value) }}
+      />
       <DialogConfirmDeletion
         open={openDeletion}
         setOpen={setOpenDeletion}
         employee={deleteEmployee}
         index={deleteIndex}
-        setEmployees={setEmployees}
         employees={employees}
+        page={page}
+        setPage={setPage}
+        refresh={refresh}
+        setRefresh={setRefresh}
         setOpenSuccessSnackbar={setOpenSuccessSnackbar}
         setSuccessMessage={setSuccessMessage}
+        setOpenErrorSnackbar={setOpenErrorSnackbar}
+        setErrorMessage={setErrorMessage}
       />
       <DialogEditEmployee
         open={openEdit}
         setOpen={setOpenEdit}
+        refresh={refresh}
+        setRefresh={setRefresh}
         employee={editEmployee}
-        index={editIndex}
-        setEmployees={setEmployees}
-        employees={employees}
         setOpenSuccessSnackbar={setOpenSuccessSnackbar}
         setSuccessMessage={setSuccessMessage}
         setOpenErrorSnackbar={setOpenErrorSnackbar}

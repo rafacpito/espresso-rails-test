@@ -13,6 +13,7 @@ import { useForm } from "react-hook-form"
 import { styles } from './styles.js'
 import schema from './schema'
 import { yupResolver } from '@hookform/resolvers/yup'
+import axios from 'axios'
 
 const Main = () => {
   const [open, setOpen] = useState(false)
@@ -26,26 +27,22 @@ const Main = () => {
   })
 
   const onSubmit = (data) => {
-    fetch('http://localhost:3000/login', {
-      method: "POST",
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
+    axios.post('http://localhost:3000/login',
+      JSON.stringify({
         user: {
           email: data.email,
           password: data.password
         }
-      })
-    }).then(response => {
-      if (response.ok) {
-        window.location.href = '/expenses/list'
-        return response.json();
-      }
-      if (response.status == 401) {
+      }),
+      {
+        headers: { 'Content-Type': 'application/json' },
+      }).then(response => {
+        if (response.status == 200) {
+          window.location.href = '/statements/list'
+        }
+      }).catch(error => {
         setOpen(true)
-      }
-    }).catch(error => console.log(error.message));
+      })
   }
 
   const createUser = () => {

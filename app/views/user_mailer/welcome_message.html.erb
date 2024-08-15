@@ -1,0 +1,89 @@
+<!doctype html>
+<html>
+  <body>
+    <div
+      style='background-color:#ffffff;color:#262626;font-family:"Helvetica Neue", "Arial Nova", "Nimbus Sans", Arial, sans-serif;font-size:16px;font-weight:400;letter-spacing:0.15008px;line-height:1.5;margin:0;padding:32px 0;min-height:100%;width:100%'
+    >
+      <table
+        align="center"
+        width="100%"
+        style="margin:0 auto;max-width:600px;background-color:#FFFFFF"
+        role="presentation"
+        cellspacing="0"
+        cellpadding="0"
+        border="0"
+      >
+        <tbody>
+          <tr style="width:100%">
+              <div style="padding:0 24px 0 24px">
+                <div style="padding:16px 24px 16px 24px;text-align:center">
+                   <%= email_image_tag("logo.png") %>
+                </div>
+              </div>
+              <div style="padding:0 24px 0 24px">
+                <div
+                  style="font-size:23px;font-weight:bold;text-align:center;padding:16px 24px 16px 24px"
+                >
+                  Prezado(a) <%= @user.name %>
+                </div>
+              </div>
+              <div style="padding:0 24px 0 24px">
+                <div style="font-weight:normal;padding:16px 24px 16px 24px">
+                  É com grande satisfação que damos as boas-vindas ao Espresso. Estamos
+                  felizes em tê-lo(a) como parte da nossa comunidade e esperamos que nossa
+                  plataforma atenda todas as suas necessidades de gestão de despesas
+                  corporativas.
+                </div>
+              </div>
+              <div style="padding:0 24px 0 24px">
+                <div style="font-weight:bold;padding:16px 24px 16px 24px">
+                  Segue abaixo as suas credenciais de acesso ao sistema:
+                </div>
+              </div>
+              <div style="padding:0 24px 0 24px">
+                <div style="font-weight:normal;padding:16px 24px 16px 24px">
+                  <span style="font-weight:bold;">URL de acesso:</span> [Link para o sistema]<br>
+                  <span style="font-weight:bold;">Usuário:</span> <%= @user.email %><br>
+                  <span style="font-weight:bold;">Senha:</span> [Sua Senha]
+                </div>
+              </div>
+              <div style="padding:0 24px 0 24px">
+                <div style="font-weight:normal;padding:16px 24px 16px 24px">
+                  1. Acesse o Espresso através do link fornecido.<br>
+                  2. Faça login com o seu usuário e senha.
+                </div>
+              </div>
+              <div style="padding:0 24px 0 24px">
+                <div style="font-weight:normal;padding:16px 24px 16px 24px">
+                  Agradecemos a sua confiança e desejamos uma excelente experiência com o
+                  Espresso,
+                  Atenciosamente,
+                </div>
+                <div style="padding:16px 20px 16px 20px">
+                  <hr
+                    style="width:100%;border:none;border-top:1px solid #CCCCCC;margin:0"
+                  />
+                </div>
+              </div>
+              <div style="padding:0 24px 0 24px">
+                <div
+                  style='color:#939393;font-size:16px;font-family:"Helvetica Neue", "Arial Nova", "Nimbus Sans", Arial, sans-serif;font-weight:normal;padding:16px 24px 16px 24px'
+                >
+                  Se tiver alguma dúvida ou precisar de ajuda, entre em contato
+                  conosco através do suporte@espressoapp.com.br
+                </div>
+              </div>
+              <div style="padding:0 24px 0 24px">
+              <div
+                style='color:#939393;font-size:16px;font-family:"Helvetica Neue", "Arial Nova", "Nimbus Sans", Arial, sans-serif;font-weight:normal;padding:16px 24px 16px 24px'
+              >
+                &#10084; Time do Espresso
+              </div>
+            </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </body>
+</html>

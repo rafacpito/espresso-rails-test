@@ -23,19 +23,17 @@ import {
   Category as CategoryIcon
 } from '@mui/icons-material'
 import { styles } from './styles.js'
+import axios from 'axios'
 
 const Layout = ({ children, user }) => {
   const [open, setOpen] = useState(false)
 
   const logout = () => {
-    fetch('http://localhost:3000/logout', {
-      method: "DELETE"
-    }).then(response => {
-      if (response.ok) {
+    axios.delete('http://localhost:3000/logout').then((response) => {
+      if (response.status == 200) {
         window.location.href = '/'
-        return response.json();
       }
-    }).catch(error => console.log(error.message));
+    }).catch(error => console.log(error.message))
   }
 
   const toggleDrawer = (newOpen) => {
@@ -58,6 +56,7 @@ const Layout = ({ children, user }) => {
   const itemRedirect = (index) => {
     switch (index) {
       case 0:
+        window.location.href = '/statements/list'
         break
       case 1:
         window.location.href = '/employees/list'
@@ -81,7 +80,11 @@ const Layout = ({ children, user }) => {
             color="inherit"
             aria-label="menu"
             sx={{ mr: 2 }}
-            onClick={() => { toggleDrawer(true) }}
+            onClick={() => {
+              if (user.role == 1) {
+                toggleDrawer(true)
+              }
+            }}
           >
             <MenuIcon />
           </IconButton>

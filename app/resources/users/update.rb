@@ -1,14 +1,14 @@
 class Users::Update
-  attr_accessor :params, :current_user
+  attr_accessor :id, :params
 
-  def initialize(params, current_user)
+  def initialize(id, params)
+    @id = id
     @params = params
-    @current_user = current_user
   end
 
   def execute
-    user = User.where(id: params[:id], company_id: current_user.company_id).first
-    user.update!(name: params[:user][:name], email: params[:user][:email])
+    user = User.find(id)
+    user.update!(name: params[:name], email: params[:email])
     user
   end
 end

@@ -22,7 +22,12 @@ Rails.application.routes.draw do
   put '/users/:id', to: 'users#update'
 
   # Despesas
-  get '/expenses/list', to: 'expenses#list'
+  get '/statements/list', to: 'statements#list'
+  get '/statements', to: 'statements#index'
+  get '/statements/archived', to: 'statements#index_archived'
+  post '/api/baas/webhooks', to: 'statements#create'
+  delete '/statements/:id', to: 'statements#destroy'
+  put '/statements/:id', to: 'statements#update'
 
   # Categorias
   get '/categories/list', to: 'categories#list'  

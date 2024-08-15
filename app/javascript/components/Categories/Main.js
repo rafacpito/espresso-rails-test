@@ -22,6 +22,7 @@ import {
 import {
   Add as AddIcon,
 } from '@mui/icons-material'
+import axios from 'axios'
 
 const Main = (props) => {
   const [openErrorSnackbar, setOpenErrorSnackbar] = useState(false)
@@ -30,18 +31,17 @@ const Main = (props) => {
   const [successMessage, setSuccessMessage] = useState('')
   const [categories, setCategories] = useState([])
   const [open, setOpen] = useState(false)
+  const [page, setPage] = useState(1)
+  const [rowsPerPage, setRowsPerPage] = useState(10)
+  const [refresh, setRefresh] = useState(0)
 
   useEffect(() => {
-    fetch('http://localhost:3000/categories', {
-      method: "GET"
-    }).then((response) => {
-      if (response.ok) {
-        return response.json();
+    axios.get(`http://localhost:3000/categories?per_page=${rowsPerPage}&page=${page}`).then((response) => {
+      if (response.status == 200) {
+        setCategories(response.data.categories)
       }
-    }).then((response) => {
-      setCategories(response.categories)
-    }).catch(error => console.log(error.message));
-  }, [])
+    }).catch(error => console.log(error.message))
+  }, [rowsPerPage, page, refresh])
 
   return (
     <Layout user={props.user}>
@@ -59,6 +59,12 @@ const Main = (props) => {
         <CategoryList
           categories={categories}
           setCategories={setCategories}
+          page={page}
+          setPage={setPage}
+          rowsPerPage={rowsPerPage}
+          setRowsPerPage={setRowsPerPage}
+          refresh={refresh}
+          setRefresh={setRefresh}
           setOpenSuccessSnackbar={setOpenSuccessSnackbar}
           setSuccessMessage={setSuccessMessage}
           setOpenErrorSnackbar={setOpenErrorSnackbar}
@@ -69,8 +75,8 @@ const Main = (props) => {
           open={open}
           setOpen={setOpen}
           user={props.user}
-          categories={categories}
-          setCategories={setCategories}
+          refresh={refresh}
+          setRefresh={setRefresh}
           setOpenErrorSnackbar={setOpenErrorSnackbar}
           setOpenSuccessSnackbar={setOpenSuccessSnackbar}
           setErrorMessage={setErrorMessage}

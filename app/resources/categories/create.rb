@@ -14,7 +14,7 @@ class Categories::Create
 
   def mount_params
     {
-      name: params[:category][:name],
+      name: params[:name],
       company_id: current_user.company.id
     }
   end

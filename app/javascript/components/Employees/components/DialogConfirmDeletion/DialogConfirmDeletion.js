@@ -11,36 +11,39 @@ import {
 import {
   Close as CloseIcon
 } from '@mui/icons-material'
+import axios from 'axios'
 
 const DialogConfirmDeletion = ({
   open,
   setOpen,
   employee,
   index,
-  setEmployees,
   employees,
+  page,
+  setPage,
+  refresh,
+  setRefresh,
   setOpenSuccessSnackbar,
-  setSuccessMessage
+  setSuccessMessage,
+  setOpenErrorSnackbar,
+  setErrorMessage
 }) => {
   const deleteUser = () => {
-    fetch(`http://localhost:3000/users/${employee.id}`, {
-      method: "DELETE"
-    }).then((response) => {
-      if (response.ok) {
-        // remove 1 funcionário e atualiza o state de funcionários para a nova lista
-        employees.splice(index, 1)
-        setEmployees(employees)
-        // abre a snackbar e define a mensagem
+    axios.delete(`http://localhost:3000/users/${employee.id}`).then((response) => {
+      if (response.status == 200) {
+        if (employees.length == 1 & page > 1) setPage(page - 1)
+        setRefresh(refresh + 1)
         setSuccessMessage('Funcionário deletado com sucesso!')
         setOpenSuccessSnackbar(true)
-        // fecha a snackbar em 3 segundos e fecha a dialog
         setTimeout(() => {
           setOpenSuccessSnackbar(false)
         }, 3000)
         setOpen(false)
-        return response.json();
       }
-    }).catch(error => console.log(error.message));
+    }).catch(error => {
+      setErrorMessage(error.response.data.error.message)
+      setOpenErrorSnackbar(true)
+    })
   }
 
   return (

@@ -13,8 +13,8 @@ class Cards::Create
 
   def mount_params
     {
-      last4: params[:card][:last4],
-      user_id: params[:card][:user_id]
+      last4: params[:last4],
+      user_id: params[:user_id]
     }
   end
 end

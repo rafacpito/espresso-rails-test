@@ -13,6 +13,7 @@ import { useForm } from "react-hook-form"
 import { styles } from './styles.js'
 import schema from './schema'
 import { yupResolver } from '@hookform/resolvers/yup'
+import axios from 'axios'
 
 const SignUp = () => {
   const [openErrorSnackbar, setOpenErrorSnackbar] = useState(false)
@@ -47,35 +48,30 @@ const SignUp = () => {
   }, [cnpjValue])
 
   const onSubmit = (data) => {
-    fetch('http://localhost:3000/users/create', {
-      method: "POST",
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
+    axios.post('http://localhost:3000/users/create',
+      JSON.stringify({
         user: {
           name: data.name,
           email: data.email,
           password: data.password,
-          companyName: data.companyName,
-          cnpj: data.cnpj,
-          role: 1
+          role: 1,
+          company: {
+            name: data.companyName,
+            cnpj: data.cnpj,
+          }
         }
-      })
-    }).then(async response => {
-      if (!response.ok) {
-        return response.text().then(text => { throw new Error(text) })
-      }
-      else {
-        setOpenSuccessSnackbar(true)
-        setTimeout(() => {
-          window.location.href = '/'
-        }, "3000");
-        return response.json()
-      }
-    })
-      .catch(error => {
-        setMessage(JSON.parse(error.message).error.message)
+      }),
+      {
+        headers: { 'Content-Type': 'application/json' },
+      }).then(response => {
+        if (response.status == 201) {
+          setOpenSuccessSnackbar(true)
+          setTimeout(() => {
+            window.location.href = '/'
+          }, "3000");
+        }
+      }).catch(error => {
+        setMessage(error.response.data.error.message)
         setOpenErrorSnackbar(true)
       })
   }
@@ -138,7 +134,6 @@ const SignUp = () => {
               label='E-mail'
               type='email'
               id='email'
-              autoFocus
               fullWidth
               required
               {...register("email")}
@@ -164,7 +159,6 @@ const SignUp = () => {
               label='Nome da empresa'
               type='companyName'
               id='companyName'
-              autoFocus
               fullWidth
               required
               {...register("companyName")}
@@ -177,7 +171,6 @@ const SignUp = () => {
               label='CNPJ'
               type='cnpj'
               id='cnpj'
-              autoFocus
               fullWidth
               required
               {...register("cnpj")}

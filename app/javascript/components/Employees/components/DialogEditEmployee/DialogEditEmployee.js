@@ -15,18 +15,18 @@ import {
 import { useForm } from "react-hook-form"
 import schema from './schema'
 import { yupResolver } from '@hookform/resolvers/yup'
+import axios from 'axios'
 
 const DialogEditEmployee = ({
   open,
   setOpen,
-  employees,
-  setEmployees,
-  setOpenErrorSnackbar,
-  setOpenSuccessSnackbar,
-  setErrorMessage,
-  setSuccessMessage,
+  refresh,
+  setRefresh,
   employee,
-  index
+  setOpenSuccessSnackbar,
+  setSuccessMessage,
+  setOpenErrorSnackbar,
+  setErrorMessage
 }) => {
   const {
     register,
@@ -42,38 +42,30 @@ const DialogEditEmployee = ({
   }, [employee]);
 
   const onSubmit = (data) => {
-    fetch(`http://localhost:3000/users/${employee.id}`, {
-      method: "PUT",
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
+    axios.put(`http://localhost:3000/users/${employee.id}`,
+      JSON.stringify({
         user: {
           name: data.name,
           email: data.email
         }
+      }),
+      {
+        headers: { 'Content-Type': 'application/json' },
+      }).then(response => {
+        if (response.status == 200) {
+          setSuccessMessage('Funcionário editado com sucesso!')
+          setOpenSuccessSnackbar(true)
+          setRefresh(refresh + 1)
+          setOpen(false)
+          reset()
+          setTimeout(() => {
+            setOpenSuccessSnackbar(false)
+          }, "3000")
+        }
+      }).catch(error => {
+        setErrorMessage(error.response.data.error.message)
+        setOpenErrorSnackbar(true)
       })
-    }).then(async response => {
-      if (!response.ok) {
-        return response.text().then(text => { throw new Error(text) })
-      }
-      else {
-        setSuccessMessage('Funcionário editado com sucesso!')
-        setOpenSuccessSnackbar(true)
-        return response.json()
-      }
-    }).then(response => {
-      employees.splice(index, 1, response.user)
-      setEmployees(employees)
-      setOpen(false)
-      reset()
-      setTimeout(() => {
-        setOpenSuccessSnackbar(false)
-      }, "3000")
-    }).catch(error => {
-      setErrorMessage(JSON.parse(error.message).error.message)
-      setOpenErrorSnackbar(true)
-    })
   }
 
   return (

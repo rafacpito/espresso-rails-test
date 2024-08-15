@@ -53,6 +53,11 @@ gem "cpf_cnpj"
 
 gem 'carrierwave'
 gem 'cloudinary'
+gem "paranoia", "~> 2.2"
+gem "ransack"
+gem "kaminari"
+gem 'cancancan'
+gem "figaro"
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console

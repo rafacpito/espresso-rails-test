@@ -8,6 +8,7 @@ import {
   DialogTitle,
   Box
 } from '@mui/material'
+import axios from 'axios'
 import {
   Close as CloseIcon
 } from '@mui/icons-material'
@@ -17,27 +18,34 @@ const DialogConfirmDeletion = ({
   setOpen,
   card,
   index,
-  setCards,
   cards,
+  page,
+  setPage,
+  refresh,
+  setRefresh,
   setOpenSuccessSnackbar,
-  setSuccessMessage
+  setSuccessMessage,
+  setOpenErrorSnackbar,
+  setErrorMessage
 }) => {
-  const deleteUser = () => {
-    fetch(`http://localhost:3000/cards/${card.id}`, {
-      method: "DELETE"
-    }).then((response) => {
-      if (response.ok) {
-        cards.splice(index, 1)
-        setCards(cards)
+  const deleteCard = () => {
+    axios.delete(`http://localhost:3000/cards/${card.id}`).then((response) => {
+      if (response.status == 200) {
+        if (cards.length == 1 & page > 1) setPage(page - 1)
+        setRefresh(refresh + 1)
         setSuccessMessage('Cartão deletado com sucesso!')
         setOpenSuccessSnackbar(true)
         setTimeout(() => {
           setOpenSuccessSnackbar(false)
         }, 3000)
         setOpen(false)
-        return response.json();
+      } else {
+        return response.text().then(text => { throw new Error(text) })
       }
-    }).catch(error => console.log(error.message));
+    }).catch(error => {
+      setErrorMessage(error.response.data.error.message)
+      setOpenErrorSnackbar(true)
+    })
   }
 
   return (
@@ -65,7 +73,7 @@ const DialogConfirmDeletion = ({
           <Button variant='outlined' onClick={() => { setOpen(false) }} autoFocus sx={{ marginRight: '10px' }}>
             Cancelar
           </Button>
-          <Button variant='contained' onClick={() => { deleteUser(index) }} autoFocus>
+          <Button variant='contained' onClick={() => { deleteCard(index) }} autoFocus>
             Confirmar
           </Button>
         </Box>

@@ -1,12 +1,14 @@
 class Categories::Destroy
-  attr_accessor :id, :current_user
+  attr_accessor :id
 
-  def initialize(id, current_user)
+  def initialize(id)
     @id = id
-    @current_user = current_user
   end
 
   def execute
-    Category.where(id: id, company_id: current_user.company_id).first.destroy
+    category = Category.find(id)
+    raise CustomException.new('Impossível deletar uma categoria com despesas vinculadas.') if category.statements.present?
+
+    category.destroy
   end
 end

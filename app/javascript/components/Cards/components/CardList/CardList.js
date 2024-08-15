@@ -6,7 +6,8 @@ import {
   Table,
   TableCell,
   TableRow,
-  TableBody
+  TableBody,
+  TablePagination
 } from '@mui/material'
 import {
   Edit as EditIcon,
@@ -19,7 +20,12 @@ import { DialogConfirmDeletion, DialogEditCard } from '../'
 
 const CardList = ({
   cards,
-  setCards,
+  page,
+  setPage,
+  rowsPerPage,
+  setRowsPerPage,
+  refresh,
+  setRefresh,
   setOpenSuccessSnackbar,
   setSuccessMessage,
   setOpenErrorSnackbar,
@@ -29,7 +35,6 @@ const CardList = ({
   const [deleteIndex, setDeleteIndex] = useState()
   const [deleteCard, setDeleteCard] = useState({})
   const [openEdit, setOpenEdit] = useState(false)
-  const [editIndex, setEditIndex] = useState()
   const [editCard, setEditCard] = useState({})
 
   const openDialogConfirmDeletion = (card, index) => {
@@ -40,8 +45,16 @@ const CardList = ({
 
   const openDialogEditCard = (card, index) => {
     setEditCard(card)
-    setEditIndex(index)
     setOpenEdit(true)
+  }
+
+  const handleChangePage = (newPage) => {
+    setPage(newPage + 1);
+  }
+
+  const handleChangeRowsPerPage = (value) => {
+    setRowsPerPage(parseInt(value, 10))
+    setPage(1)
   }
 
   return (
@@ -108,23 +121,37 @@ const CardList = ({
           ))}
         </TableBody>
       </Table>
+      <TablePagination
+        rowsPerPageOptions={[5, 10, 25]}
+        labelRowsPerPage={"Quantidade por página:"}
+        component="div"
+        count={100}
+        page={page - 1}
+        onPageChange={(e, number) => { handleChangePage(number) }}
+        rowsPerPage={rowsPerPage}
+        onRowsPerPageChange={(e) => { handleChangeRowsPerPage(e.target.value) }}
+      />
       <DialogConfirmDeletion
         open={openDeletion}
         setOpen={setOpenDeletion}
         card={deleteCard}
         index={deleteIndex}
-        setCards={setCards}
         cards={cards}
+        page={page}
+        setPage={setPage}
+        refresh={refresh}
+        setRefresh={setRefresh}
         setOpenSuccessSnackbar={setOpenSuccessSnackbar}
         setSuccessMessage={setSuccessMessage}
+        setOpenErrorSnackbar={setOpenErrorSnackbar}
+        setErrorMessage={setErrorMessage}
       />
       <DialogEditCard
         open={openEdit}
         setOpen={setOpenEdit}
         card={editCard}
-        index={editIndex}
-        setCards={setCards}
-        cards={cards}
+        refresh={refresh}
+        setRefresh={setRefresh}
         setOpenSuccessSnackbar={setOpenSuccessSnackbar}
         setSuccessMessage={setSuccessMessage}
         setOpenErrorSnackbar={setOpenErrorSnackbar}
