@@ -9,7 +9,7 @@ class Users::Create
     ActiveRecord::Base.transaction do
       @company = define_company
       user = create_user
-      send_email(user)
+      send_email(user) if user.role == User::EMPLOYEE_ROLE
       user
     end
   end
