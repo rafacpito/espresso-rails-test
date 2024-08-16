@@ -15,7 +15,7 @@ Rails.application.configure do
   # Show full error reports.
   config.consider_all_requests_local = true
 
-  config.action_mailer.default_url_options = { :host => 'localhost:3000' }
+  config.action_mailer.default_url_options = { host: 'localhost:3000' }
 
   # Enable/disable caching. By default caching is disabled.
   # Run rails dev:cache to toggle caching.
@@ -42,15 +42,15 @@ Rails.application.configure do
 
   config.action_mailer.delivery_method = :smtp
   config.action_mailer.smtp_settings = {
-    address:         'smtp.gmail.com',
-    port:            587,
-    domain:          'example.com',
-    user_name:       'couto1105@gmail.com',
-    password:        'zlmpysxptozebyiw',
-    authentication:  'plain',
+    address: 'smtp.gmail.com',
+    port: 587,
+    domain: 'example.com',
+    user_name: 'couto1105@gmail.com',
+    password: 'zlmpysxptozebyiw',
+    authentication: 'plain',
     enable_starttls: true,
-    open_timeout:    5,
-    read_timeout:    5
+    open_timeout: 5,
+    read_timeout: 5
   }
 
   # Print deprecation notices to the Rails logger.

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 RSpec.describe Statements::Destroy do
@@ -7,68 +9,56 @@ RSpec.describe Statements::Destroy do
   let(:statement) { create(:statement, card: card) }
 
   describe '#initialize' do
-    before do
-      @instance = described_class.new(statement.id, admin)
-    end
+    let(:instance) { described_class.new(statement.id, admin) }
 
     it 'id to be instancied' do
-      expect(@instance.id).to eq(statement.id)
+      expect(instance.id).to eq(statement.id)
     end
 
     it 'current_user to be instancied' do
-      expect(@instance.current_user).to eq(admin)
+      expect(instance.current_user).to eq(admin)
     end
   end
 
   describe '#execute' do
-    context 'statement archive and unproven' do
-      before do
-        @response = described_class.new(statement.id, admin).execute
-      end
+    context 'when statement archive and unproven' do
+      let(:response) { described_class.new(statement.id, admin).execute }
 
       it 'returns statement object' do
-        expect(@response.class).to eq(Statement)
+        expect(response.class).to eq(Statement)
       end
 
       it 'statement archived' do
-        expect(@response.deleted_at).to be_present
+        expect(response.deleted_at).to be_present
       end
     end
 
-    context 'statement id does not exists' do
-      before do
-        @instance = described_class.new('asd', admin)
-      end
+    context 'when statement id does not exists' do
+      let(:response) { described_class.new('asd', admin).execute }
 
       it 'raises ActiveRecord::RecordNotFound exception' do
-        expect { @instance.execute }.to raise_error(ActiveRecord::RecordNotFound)
+        expect { response }.to raise_error(ActiveRecord::RecordNotFound)
       end
     end
 
-    context 'statement is already proven' do
+    context 'when statement is already proven' do
       let(:statement_proven) { create(:statement, :proven, card: card) }
-
-      before do
-        @instance = described_class.new(statement_proven.id, admin)
-      end
+      let(:response) { described_class.new(statement_proven.id, admin).execute }
 
       it 'raises CustomException exception' do
-        expect { @instance.execute }.to raise_error(CustomException)
+        expect { response }.to raise_error(CustomException)
       end
     end
 
-    context 'statement from another company' do
+    context 'when statement from another company' do
       let(:other_admin) { create(:user) }
       let(:other_employee) { create(:user, company: other_admin.company) }
       let(:other_card) { create(:card, user: other_employee) }
       let(:other_statement) { create(:statement, card: other_card) }
-
-      before do
-        @instance = described_class.new(other_statement.id, admin)
-      end
+      let(:response) { described_class.new(other_statement.id, admin).execute }
 
       it 'raises ActiveRecord::RecordNotFound exception' do
-        expect { @instance.execute }.to raise_error(ActiveRecord::RecordNotFound)
+        expect { response }.to raise_error(ActiveRecord::RecordNotFound)
       end
     end
   end

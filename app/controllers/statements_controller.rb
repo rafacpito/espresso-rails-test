@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class StatementsController < ApplicationController
   before_action :authenticate_user!, except: [:create]
   load_and_authorize_resource except: [:create]
@@ -5,14 +7,14 @@ class StatementsController < ApplicationController
 
   def list; end
 
-  def create
-    Statements::Create.new(params).execute
-    head :ok
-  end
-
   def index
     list = Statements::List.new(current_user, params).execute
     render json: list, meta: pagination(list), each_serializer: StatementSerializer, status: :ok
+  end
+
+  def create
+    Statements::Create.new(params).execute
+    head :ok
   end
 
   def index_archived
@@ -20,13 +22,13 @@ class StatementsController < ApplicationController
     render json: list, meta: pagination(list), each_serializer: StatementSerializer, status: :ok
   end
 
-  def destroy
-    statement = Statements::Destroy.new(params[:id], current_user).execute
+  def update
+    statement = Statements::Update.new(params[:id], statement_params, current_user).execute
     render json: statement, serializer: StatementSerializer, status: :ok
   end
 
-  def update
-    statement = Statements::Update.new(params[:id], statement_params, current_user).execute
+  def destroy
+    statement = Statements::Destroy.new(params[:id], current_user).execute
     render json: statement, serializer: StatementSerializer, status: :ok
   end
 

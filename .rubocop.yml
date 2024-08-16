@@ -10,3 +10,29 @@ AllCops:
 
 Style/Documentation:
   Enabled: false
+RSpec/MultipleMemoizedHelpers:
+  Enabled: false
+
+RSpec/MultipleExpectations:
+  Enabled: false
+
+Rails/ResponseParsedBody:
+  Enabled: false
+
+RSpec/NestedGroups:
+  Enabled: false
+
+RSpec/AnyInstance:
+  Enabled: false
+
+Rails/BulkChangeTable:
+  Enabled: false
+
+Lint/ConstantDefinitionInBlock:
+  Enabled: false
+
+Metrics/BlockLength:
+  Enabled: false
+
+Rails/UniqueValidationWithoutIndex:
+  Enabled: false

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 RSpec.describe CategoriesController do
@@ -8,18 +10,18 @@ RSpec.describe CategoriesController do
 
   before { sign_in(admin) }
 
-  describe "GET list" do 
-    context 'not signed in' do
+  describe 'GET list' do
+    context 'when not signed in' do
       before { sign_out(admin) }
-  
-      it "redirect to home(login)" do 
+
+      it 'redirect to home(login)' do
         get :list
         expect(response).to redirect_to root_path
       end
     end
 
-    context 'signed in' do
-      it "renders categories#list" do 
+    context 'when signed in' do
+      it 'renders categories#list' do
         get :list
         expect(response).to render_template :list
       end
@@ -27,20 +29,21 @@ RSpec.describe CategoriesController do
   end
 
   describe 'POST create' do
-    context 'not signed in' do
+    context 'when not signed in' do
       before { sign_out(admin) }
 
-      it "redirect to home(login)" do 
+      it 'redirect to home(login)' do
         post :create, params: { category: { name: 'teste' } }
         expect(response).to redirect_to root_path
       end
     end
 
-    context 'signed in' do
-      context 'valid_params' do
+    context 'when signed in' do
+      context 'with valid_params' do
+        let(:body) { JSON.parse(response.body) }
+
         before do
           post :create, params: { category: { name: 'teste' } }
-          @body = JSON.parse(response.body)
         end
 
         it 'returns created status code' do
@@ -48,11 +51,11 @@ RSpec.describe CategoriesController do
         end
 
         it 'response keys matchs body keys' do
-          expect(@body.keys).to contain_exactly(*response_keys)
+          expect(body.keys).to match_array(response_keys)
         end
 
         it 'category keys to match expected category keys' do
-          expect(@body['category'].keys).to contain_exactly(*category_keys)
+          expect(body['category'].keys).to match_array(category_keys)
         end
       end
 
@@ -69,20 +72,21 @@ RSpec.describe CategoriesController do
   end
 
   describe 'DELETE destroy' do
-    context 'not signed in' do
+    context 'when not signed in' do
       before { sign_out(admin) }
 
-      it "redirect to home(login)" do 
+      it 'redirect to home(login)' do
         delete :destroy, params: { id: category.id }
         expect(response).to redirect_to root_path
       end
     end
 
-    context 'signed in' do
-      context 'valid_params' do
+    context 'when signed in' do
+      context 'with valid_params' do
+        let(:body) { JSON.parse(response.body) }
+
         before do
           delete :destroy, params: { id: category.id }
-          @body = JSON.parse(response.body)
         end
 
         it 'returns created status code' do
@@ -90,11 +94,11 @@ RSpec.describe CategoriesController do
         end
 
         it 'response keys matchs body keys' do
-          expect(@body.keys).to contain_exactly(*response_keys)
+          expect(body.keys).to match_array(response_keys)
         end
 
         it 'category keys to match expected category keys' do
-          expect(@body['category'].keys).to contain_exactly(*category_keys)
+          expect(body['category'].keys).to match_array(category_keys)
         end
       end
 
@@ -123,20 +127,21 @@ RSpec.describe CategoriesController do
   end
 
   describe 'PUT update' do
-    context 'not signed in' do
+    context 'when not signed in' do
       before { sign_out(admin) }
 
-      it "redirect to home(login)" do 
+      it 'redirect to home(login)' do
         put :update, params: { id: category.id, category: { name: 'teste' } }
         expect(response).to redirect_to root_path
       end
     end
 
-    context 'signed in' do
-      context 'valid_params' do
+    context 'when signed in' do
+      context 'with valid_params' do
+        let(:body) { JSON.parse(response.body) }
+
         before do
           put :update, params: { id: category.id, category: { name: 'teste' } }
-          @body = JSON.parse(response.body)
         end
 
         it 'returns created status code' do
@@ -144,11 +149,11 @@ RSpec.describe CategoriesController do
         end
 
         it 'response keys matchs body keys' do
-          expect(@body.keys).to contain_exactly(*response_keys)
+          expect(body.keys).to match_array(response_keys)
         end
 
         it 'category keys to match expected category keys' do
-          expect(@body['category'].keys).to contain_exactly(*category_keys)
+          expect(body['category'].keys).to match_array(category_keys)
         end
       end
 
@@ -175,23 +180,23 @@ RSpec.describe CategoriesController do
   end
 
   describe 'GET index' do
-    context 'not signed in' do
+    context 'when not signed in' do
       before { sign_out(admin) }
 
-      it "redirect to home(login)" do 
+      it 'redirect to home(login)' do
         get :index, params: {}
         expect(response).to redirect_to root_path
       end
     end
 
-    context 'signed in' do
+    context 'when signed in' do
       let(:response_list_keys) { %w[categories meta] }
       let(:meta_keys) { %w[per_page current_page total_pages total_count] }
-      let!(:category) { create(:category, company: admin.company) }
+      let(:body) { JSON.parse(response.body) }
 
       before do
+        create(:category, company: admin.company)
         get :index, params: {}
-        @body = JSON.parse(response.body)
       end
 
       it 'returns created status code' do
@@ -199,17 +204,17 @@ RSpec.describe CategoriesController do
       end
 
       it 'response keys matchs body keys' do
-        expect(@body.keys).to contain_exactly(*response_list_keys)
+        expect(body.keys).to match_array(response_list_keys)
       end
 
       it 'match with meta keys' do
-        expect(@body['meta'].keys).to contain_exactly(*meta_keys)
+        expect(body['meta'].keys).to match_array(meta_keys)
       end
 
       it 'category keys to match expected category keys' do
-        expect(@body['categories']).to be_present
-        @body['categories'].each do |category|
-          expect(category.keys).to contain_exactly(*category_keys)
+        expect(body['categories']).to be_present
+        body['categories'].each do |category|
+          expect(category.keys).to match_array(category_keys)
         end
       end
     end

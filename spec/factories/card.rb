@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 FactoryBot.define do
   factory :card, class: Card do
     last4 { Faker::Number.number(digits: 4) }

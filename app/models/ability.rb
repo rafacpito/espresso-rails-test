@@ -5,9 +5,10 @@ class Ability
 
   def initialize(user)
     return if user.nil?
-    
-    return admin_permissions if user.admin?
-    normal_permissions(user)
+
+    admin_permissions if user.admin?
+
+    normal_permissions(user) if user.employee?
   end
 
   def admin_permissions
@@ -15,12 +16,12 @@ class Ability
     can :manage, Category
     can :manage, Company
     can :manage, User
-    can [:read, :destroy, :list, :index_archived], Statement 
+    can %i[read destroy list index_archived], Statement
   end
 
-  def normal_permissions(user)
-    can [:create, :read, :update], Attachment
-    can [:read, :list, :update], Statement
+  def normal_permissions(_user)
+    can %i[create read update], Attachment
+    can %i[read list update], Statement
     can [:read], Category
   end
 end

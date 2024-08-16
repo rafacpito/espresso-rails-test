@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class User < ApplicationRecord
   include UserQuery
 
@@ -18,6 +20,10 @@ class User < ApplicationRecord
   accepts_nested_attributes_for :company
 
   def admin?
-    role == 1
+    role == ADMIN_ROLE
+  end
+
+  def employee?
+    role == EMPLOYEE_ROLE
   end
 end

@@ -1,29 +1,34 @@
-class Statements::List
-  attr_accessor :current_user, :params
+# frozen_string_literal: true
 
-  def initialize(current_user, params)
-    @current_user = current_user
-    @params = params
-  end
+module Statements
+  class List
+    attr_accessor :current_user, :params
 
-  def execute
-    return find_user_statements if current_user.role == User::EMPLOYEE_ROLE
+    def initialize(current_user, params)
+      @current_user = current_user
+      @params = params
+    end
 
-    find_company_statements
-  end
+    def execute
+      return find_user_statements if current_user.role == User::EMPLOYEE_ROLE
 
-  def find_user_statements
-    Statement.__search({ card_id: [current_user.card.try(:id) || 0], per_page: params[:per_page], page: params[:page] })
-  end
+      find_company_statements
+    end
 
-  def find_company_statements
-    Statement.__search({ card_id: find_company_cards, per_page: params[:per_page], page: params[:page] })
-  end
+    def find_user_statements
+      Statement.__search({ card_id: [current_user.card.try(:id) || 0], per_page: params[:per_page],
+                           page: params[:page] })
+    end
 
-  def find_company_cards
-    company_cards = current_user.company.cards.map(&:id)
-    return company_cards if company_cards.present?
+    def find_company_statements
+      Statement.__search({ card_id: find_company_cards, per_page: params[:per_page], page: params[:page] })
+    end
 
-    [0]
+    def find_company_cards
+      company_cards = current_user.company.cards.map(&:id)
+      return company_cards if company_cards.present?
+
+      [0]
+    end
   end
 end

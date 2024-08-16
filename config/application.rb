@@ -31,8 +31,8 @@ module EspressoRailsTest
 
     # Don't generate system test files.
     config.autoload_paths << Rails.root.join('app/resources')
-    config.eager_load_paths += Dir[Rails.root.join('app', 'models', 'concerns', 'query')]
-    config.i18n.default_locale = :"pt-BR"
+    config.eager_load_paths += Dir[Rails.root.join('app/models/concerns/query')]
+    config.i18n.default_locale = :'pt-BR'
     config.generators.system_tests = nil
     config.time_zone = 'Brasilia'
     config.action_controller.default_protect_from_forgery = true
@@ -45,8 +45,8 @@ module EspressoRailsTest
         resource(
           '*',
           headers: :any,
-          expose: ["Authorization"],
-          methods: [:get, :patch, :put, :delete, :post, :options,               :show]
+          expose: ['Authorization'],
+          methods: %i[get patch put delete post options show]
         )
       end
     end

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 RSpec.describe Users::Create do
@@ -16,31 +18,27 @@ RSpec.describe Users::Create do
   end
 
   describe '#initialize' do
-    before do
-      @instance = described_class.new(params)
-    end
+    let(:instance) { described_class.new(params) }
 
     it 'params to be instancied' do
-      expect(@instance.params).to eq(params)
+      expect(instance.params).to eq(params)
     end
   end
 
   describe '#execute' do
     context 'when params are valids sending company params' do
-      before do
-        @response = described_class.new(params).execute
-      end
+      let(:response) { described_class.new(params).execute }
 
       it 'returns user object' do
-        expect(@response.class).to eq(User)
+        expect(response.class).to eq(User)
       end
 
       it 'object persisted' do
-        expect(@response.persisted?).to be_truthy
+        expect(response).to be_persisted
       end
 
       it 'has a company associated to user' do
-        expect(@response.company).to be_present
+        expect(response.company).to be_present
       end
     end
 
@@ -52,28 +50,25 @@ RSpec.describe Users::Create do
           email: Faker::Internet.email,
           password: Faker::Internet.password,
           role: User::EMPLOYEE_ROLE,
-          company_id: company.id 
+          company_id: company.id
         }
       end
-
-      before do
-        @response = described_class.new(params).execute
-      end
+      let(:response) { described_class.new(params).execute }
 
       it 'returns user object' do
-        expect(@response.class).to eq(User)
+        expect(response.class).to eq(User)
       end
 
       it 'object persisted' do
-        expect(@response.persisted?).to be_truthy
+        expect(response).to be_persisted
       end
 
       it 'has a company associated to user' do
-        expect(@response.company.id).to eq(company.id)
+        expect(response.company.id).to eq(company.id)
       end
     end
 
-    context 'wrong company params' do
+    context 'when wrong company params' do
       let(:company) { create(:company) }
       let(:params) do
         {
@@ -87,13 +82,10 @@ RSpec.describe Users::Create do
           }
         }
       end
-
-      before do
-        @instance = described_class.new(params)
-      end
+      let(:response) { described_class.new(params).execute }
 
       it 'raises ActiveRecord::RecordInvalid exception' do
-        expect { @instance.execute }.to raise_error(ActiveRecord::RecordInvalid)
+        expect { response }.to raise_error(ActiveRecord::RecordInvalid)
       end
     end
 
@@ -107,13 +99,10 @@ RSpec.describe Users::Create do
           company_id: 'asd'
         }
       end
-
-      before do
-        @instance = described_class.new(params)
-      end
+      let(:response) { described_class.new(params).execute }
 
       it 'raises ActiveRecord::RecordNotFound exception' do
-        expect { @instance.execute }.to raise_error(ActiveRecord::RecordNotFound)
+        expect { response }.to raise_error(ActiveRecord::RecordNotFound)
       end
     end
 
@@ -125,13 +114,10 @@ RSpec.describe Users::Create do
           company_id: company.id
         }
       end
-
-      before do
-        @instance = described_class.new(invalid_params)
-      end
+      let(:response) { described_class.new(invalid_params).execute }
 
       it 'raises ActiveRecord::RecordInvalid exception' do
-        expect { @instance.execute }.to raise_error(ActiveRecord::RecordInvalid)
+        expect { response }.to raise_error(ActiveRecord::RecordInvalid)
       end
     end
   end

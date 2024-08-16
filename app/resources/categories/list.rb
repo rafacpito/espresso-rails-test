@@ -1,12 +1,16 @@
-class Categories::List
-  attr_accessor :current_user, :params
+# frozen_string_literal: true
 
-  def initialize(current_user, params)
-    @current_user = current_user
-    @params = params
-  end
+module Categories
+  class List
+    attr_accessor :current_user, :params
 
-  def execute
-    Category.__search({ company_id: current_user.company_id, per_page: params[:per_page], page: params[:page] })
+    def initialize(current_user, params)
+      @current_user = current_user
+      @params = params
+    end
+
+    def execute
+      Category.__search({ company_id: current_user.company_id, per_page: params[:per_page], page: params[:page] })
+    end
   end
 end

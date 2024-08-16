@@ -1,23 +1,27 @@
-class Cards::Create
-  attr_accessor :params
+# frozen_string_literal: true
 
-  def initialize(params)
-    @params = params
-  end
+module Cards
+  class Create
+    attr_accessor :params
 
-  def execute
-    user = User.find(params[:user_id])
-    raise CustomException.new('Cartão não pode ser vinculado a conta administradora!') if user.role == User::ADMIN_ROLE
+    def initialize(params)
+      @params = params
+    end
 
-    Card.create!(mount_params(user))
-  end
+    def execute
+      user = User.find(params[:user_id])
+      raise CustomException, 'Cartão não pode ser vinculado a conta administradora!' if user.role == User::ADMIN_ROLE
 
-  private
+      Card.create!(mount_params(user))
+    end
 
-  def mount_params(user)
-    {
-      last4: params[:last4],
-      user: user
-    }
+    private
+
+    def mount_params(user)
+      {
+        last4: params[:last4],
+        user: user
+      }
+    end
   end
 end

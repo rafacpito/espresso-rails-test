@@ -1,11 +1,15 @@
-class Companies::Create
-  attr_accessor :params
+# frozen_string_literal: true
 
-  def initialize(params)
-    @params = params
-  end
+module Companies
+  class Create
+    attr_accessor :params
 
-  def execute
-    Company.create!(params)
+    def initialize(params)
+      @params = params
+    end
+
+    def execute
+      Company.create!(params)
+    end
   end
 end

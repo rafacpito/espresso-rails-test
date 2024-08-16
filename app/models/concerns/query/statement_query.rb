@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module StatementQuery
   extend ActiveSupport::Concern
   include BaseQuery
@@ -19,7 +21,7 @@ module StatementQuery
 
     def format_order(order = '')
       return order if order.present?
- 
+
       ['id DESC']
     end
   end

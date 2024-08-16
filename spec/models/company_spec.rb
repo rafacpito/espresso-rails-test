@@ -1,38 +1,42 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
-RSpec.describe Company, type: :model do
-  context 'validations' do
+RSpec.describe Company do
+  context 'with validations' do
     it { is_expected.to validate_presence_of(:name) }
     it { is_expected.to validate_presence_of(:cnpj) }
   end
 
-  context 'should validate uniqueness of cnpj' do
-    let!(:company) { create(:company) }
+  context 'when validate uniqueness of cnpj' do
+    before do
+      create(:company)
+    end
 
-    it { should validate_uniqueness_of(:cnpj).case_insensitive }
+    it { is_expected.to validate_uniqueness_of(:cnpj).case_insensitive }
   end
 
-  context 'validate_cnpj' do
+  context 'when validate_cnpj' do
     context 'when CNPJ is valid' do
-      let!(:company) { create(:company) }
+      let(:company) { create(:company) }
 
       it 'valid? method returns true' do
-        expect(company.valid?).to be_truthy
+        expect(company).to be_valid
       end
     end
 
     context 'when CNPJ is invalid' do
-      let!(:company) { build(:company, cnpj: 'invalid') }
-      
+      let(:company) { build(:company, cnpj: 'invalid') }
+
       it 'valid? method returns false' do
-        expect(company.valid?).to be_falsey
+        expect(company).not_to be_valid
       end
     end
   end
 
-  context 'associations' do
-    it { should have_many(:users) }
-    it { should have_many(:categories) }
-    it { should have_many(:cards).through(:users) }
+  context 'with associations' do
+    it { is_expected.to have_many(:users) }
+    it { is_expected.to have_many(:categories) }
+    it { is_expected.to have_many(:cards).through(:users) }
   end
 end

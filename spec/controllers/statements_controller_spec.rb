@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 RSpec.describe StatementsController do
@@ -10,18 +12,18 @@ RSpec.describe StatementsController do
 
   before { sign_in(admin) }
 
-  describe "GET list" do 
-    context 'not signed in' do
+  describe 'GET list' do
+    context 'when not signed in' do
       before { sign_out(admin) }
-  
-      it "redirect to home(login)" do
+
+      it 'redirect to home(login)' do
         get :list
         expect(response).to redirect_to root_path
       end
     end
 
-    context 'signed in' do
-      it "renders statements#list" do 
+    context 'when signed in' do
+      it 'renders statements#list' do
         get :list
         expect(response).to render_template :list
       end
@@ -31,15 +33,15 @@ RSpec.describe StatementsController do
   describe 'POST create' do
     let(:params) do
       {
-        merchant: "Uber *UBER *TRIP",
+        merchant: 'Uber *UBER *TRIP',
         cost: 1790,
-        created_at: "2024-07-04 12:15:52",
+        created_at: '2024-07-04 12:15:52',
         last4: card.last4,
-        transaction_id: "3e85a730-bb1f-451b-9a39-47c55aa054db"
+        transaction_id: '3e85a730-bb1f-451b-9a39-47c55aa054db'
       }
     end
 
-    context 'valid_params' do
+    context 'with valid_params' do
       before do
         post :create, params: params
       end
@@ -52,11 +54,11 @@ RSpec.describe StatementsController do
     context 'when last4 invalid/not exist' do
       let(:params) do
         {
-          merchant: "Uber *UBER *TRIP",
+          merchant: 'Uber *UBER *TRIP',
           cost: 1790,
-          created_at: "2024-07-04 12:15:52",
+          created_at: '2024-07-04 12:15:52',
           last4: '11111',
-          transaction_id: "3e85a730-bb1f-451b-9a39-47c55aa054db"
+          transaction_id: '3e85a730-bb1f-451b-9a39-47c55aa054db'
         }
       end
 
@@ -71,20 +73,21 @@ RSpec.describe StatementsController do
   end
 
   describe 'DELETE destroy' do
-    context 'not signed in' do
+    context 'when not signed in' do
       before { sign_out(admin) }
 
-      it "redirect to home(login)" do 
+      it 'redirect to home(login)' do
         delete :destroy, params: { id: statement.id }
         expect(response).to redirect_to root_path
       end
     end
 
-    context 'signed in' do
-      context 'valid_params' do
+    context 'when signed in' do
+      context 'with valid_params' do
+        let(:body) { JSON.parse(response.body) }
+
         before do
           delete :destroy, params: { id: statement.id }
-          @body = JSON.parse(response.body)
         end
 
         it 'returns created status code' do
@@ -92,11 +95,11 @@ RSpec.describe StatementsController do
         end
 
         it 'response keys matchs body keys' do
-          expect(@body.keys).to contain_exactly(*response_keys)
+          expect(body.keys).to match_array(response_keys)
         end
 
         it 'statement keys to match expected statement keys' do
-          expect(@body['statement'].keys).to contain_exactly(*statement_keys)
+          expect(body['statement'].keys).to match_array(statement_keys)
         end
       end
 
@@ -125,24 +128,24 @@ RSpec.describe StatementsController do
   end
 
   describe 'PUT update' do
-    context 'not signed in' do
+    context 'when not signed in' do
       before { sign_out(admin) }
 
-      it "redirect to home(login)" do 
+      it 'redirect to home(login)' do
         put :update, params: { id: statement.id, statement: { name: 'teste' } }
         expect(response).to redirect_to root_path
       end
     end
 
-    context 'signed in as employee' do
+    context 'when signed in as employee' do
       let(:category) { create(:category, company: employee.company) }
       let(:params) do
         {
           category_id: category.id,
           file: ActionDispatch::Http::UploadedFile.new(
-            tempfile: File.new(Rails.root + 'app/assets/images/logo.png'),
-            filename: File.basename(File.new(Rails.root + 'app/assets/images/logo.png')),
-            type: "image/png"
+            tempfile: File.new(Rails.root.join('app/assets/images/logo.png')),
+            filename: File.basename(File.new(Rails.root.join('app/assets/images/logo.png'))),
+            type: 'image/png'
           )
         }
       end
@@ -152,11 +155,12 @@ RSpec.describe StatementsController do
         sign_in(employee)
       end
 
-      context 'valid_params' do
+      context 'with valid_params' do
+        let(:body) { JSON.parse(response.body) }
+
         before do
           allow_any_instance_of(Statements::Update).to receive(:handle_attachment).and_return(true)
           put :update, params: { id: statement.id, statement: params }
-          @body = JSON.parse(response.body)
         end
 
         it 'returns created status code' do
@@ -164,11 +168,11 @@ RSpec.describe StatementsController do
         end
 
         it 'response keys matchs body keys' do
-          expect(@body.keys).to contain_exactly(*response_keys)
+          expect(body.keys).to match_array(response_keys)
         end
 
         it 'statement keys to match expected statement keys' do
-          expect(@body['statement'].keys).to contain_exactly(*statement_keys)
+          expect(body['statement'].keys).to match_array(statement_keys)
         end
       end
 
@@ -188,12 +192,13 @@ RSpec.describe StatementsController do
           {
             category_id: other_category.id,
             file: ActionDispatch::Http::UploadedFile.new(
-              tempfile: File.new(Rails.root + 'app/assets/images/logo.png'),
-              filename: File.basename(File.new(Rails.root + 'app/assets/images/logo.png')),
-              type: "image/png"
+              tempfile: File.new(Rails.root.join('app/assets/images/logo.png')),
+              filename: File.basename(File.new(Rails.root.join('app/assets/images/logo.png'))),
+              type: 'image/png'
             )
           }
         end
+
         before do
           put :update, params: { id: statement.id, statement: params_invalid }
         end
@@ -206,23 +211,23 @@ RSpec.describe StatementsController do
   end
 
   describe 'GET index' do
-    context 'not signed in' do
+    context 'when not signed in' do
       before { sign_out(admin) }
 
-      it "redirect to home(login)" do 
+      it 'redirect to home(login)' do
         get :index, params: {}
         expect(response).to redirect_to root_path
       end
     end
 
-    context 'signed in' do
+    context 'when signed in' do
       let(:response_list_keys) { %w[statements meta] }
       let(:meta_keys) { %w[per_page current_page total_pages total_count] }
-      let!(:statement) { create(:statement, card: card) }
+      let(:body) { JSON.parse(response.body) }
 
       before do
+        create(:statement, card: card)
         get :index, params: {}
-        @body = JSON.parse(response.body)
       end
 
       it 'returns created status code' do
@@ -230,40 +235,40 @@ RSpec.describe StatementsController do
       end
 
       it 'response keys matchs body keys' do
-        expect(@body.keys).to contain_exactly(*response_list_keys)
+        expect(body.keys).to match_array(response_list_keys)
       end
 
       it 'match with meta keys' do
-        expect(@body['meta'].keys).to contain_exactly(*meta_keys)
+        expect(body['meta'].keys).to match_array(meta_keys)
       end
 
       it 'statement keys to match expected statement keys' do
-        expect(@body['statements']).to be_present
-        @body['statements'].each do |statement|
-          expect(statement.keys).to contain_exactly(*statement_keys)
+        expect(body['statements']).to be_present
+        body['statements'].each do |statement|
+          expect(statement.keys).to match_array(statement_keys)
         end
       end
     end
   end
 
   describe 'GET index_archived' do
-    context 'not signed in' do
+    context 'when not signed in' do
       before { sign_out(admin) }
 
-      it "redirect to home(login)" do 
+      it 'redirect to home(login)' do
         get :index_archived, params: {}
         expect(response).to redirect_to root_path
       end
     end
 
-    context 'signed in' do
+    context 'when signed in' do
       let(:response_list_keys) { %w[statements meta] }
       let(:meta_keys) { %w[per_page current_page total_pages total_count] }
-      let!(:statement) { create(:statement, card: card, deleted_at: DateTime.now) }
+      let(:body) { JSON.parse(response.body) }
 
       before do
+        create(:statement, card: card, deleted_at: DateTime.now)
         get :index_archived, params: {}
-        @body = JSON.parse(response.body)
       end
 
       it 'returns created status code' do
@@ -271,17 +276,17 @@ RSpec.describe StatementsController do
       end
 
       it 'response keys matchs body keys' do
-        expect(@body.keys).to contain_exactly(*response_list_keys)
+        expect(body.keys).to match_array(response_list_keys)
       end
 
       it 'match with meta keys' do
-        expect(@body['meta'].keys).to contain_exactly(*meta_keys)
+        expect(body['meta'].keys).to match_array(meta_keys)
       end
 
       it 'statement keys to match expected statement keys' do
-        expect(@body['statements']).to be_present
-        @body['statements'].each do |statement|
-          expect(statement.keys).to contain_exactly(*statement_keys)
+        expect(body['statements']).to be_present
+        body['statements'].each do |statement|
+          expect(statement.keys).to match_array(statement_keys)
         end
       end
     end

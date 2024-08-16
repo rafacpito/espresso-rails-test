@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module CategoryQuery
   extend ActiveSupport::Concern
   include BaseQuery
@@ -12,13 +14,13 @@ module CategoryQuery
 
       {
         id_eq: params[:id],
-        company_id_eq: params[:company_id],
+        company_id_eq: params[:company_id]
       }
     end
 
     def format_order(order = '')
       return order if order.present?
- 
+
       ['id DESC']
     end
   end

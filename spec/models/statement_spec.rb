@@ -1,8 +1,9 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
-RSpec.describe Statement, type: :model do
-
-  context 'validations' do
+RSpec.describe Statement do
+  context 'with validations' do
     it { is_expected.to validate_presence_of(:performed_at) }
     it { is_expected.to validate_presence_of(:cost) }
     it { is_expected.to validate_presence_of(:merchant) }
@@ -10,9 +11,9 @@ RSpec.describe Statement, type: :model do
     it { is_expected.to validate_presence_of(:status) }
   end
 
-  context 'associations' do
-    it { should belong_to(:card) }
-    it { should belong_to(:category).optional }
-    it { should have_one(:attachment) }
+  context 'with associations' do
+    it { is_expected.to belong_to(:card) }
+    it { is_expected.to belong_to(:category).optional }
+    it { is_expected.to have_one(:attachment) }
   end
 end

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module ErrorsHandler
   module Handler
     def self.included(clazz)

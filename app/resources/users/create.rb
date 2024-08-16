@@ -1,57 +1,61 @@
-class Users::Create
-  attr_accessor :params, :company, :password
+# frozen_string_literal: true
 
-  def initialize(params)
-    @params = params
-  end
+module Users
+  class Create
+    attr_accessor :params, :company, :password
 
-  def execute
-    ActiveRecord::Base.transaction do
-      @company = define_company
-      user = create_user
-      send_email(user) if user.role == User::EMPLOYEE_ROLE
-      user
+    def initialize(params)
+      @params = params
     end
-  end
 
-  private
+    def execute
+      ActiveRecord::Base.transaction do
+        @company = define_company
+        user = create_user
+        send_email(user) if user.role == User::EMPLOYEE_ROLE
+        user
+      end
+    end
 
-  def define_company
-    return Company.find(params[:company_id]) if params[:company_id].present?
+    private
 
-    create_company
-  end
+    def define_company
+      return Company.find(params[:company_id]) if params[:company_id].present?
 
-  def create_company
-    Companies::Create.new(mount_params_to_company).execute
-  end
+      create_company
+    end
 
-  def mount_params_to_company
-    {
-      name: params[:company][:name],
-      cnpj: params[:company][:cnpj]
-    }
-  end
+    def create_company
+      Companies::Create.new(mount_params_to_company).execute
+    end
 
-  def create_user
-    User.create!(mount_params)
-  end
+    def mount_params_to_company
+      {
+        name: params[:company][:name],
+        cnpj: params[:company][:cnpj]
+      }
+    end
 
-  def mount_params
-    {
-      name: params[:name],
-      email: params[:email],
-      password: params[:password] || generate_random_password,
-      role: params[:role],
-      company: company
-    }
-  end
+    def create_user
+      User.create!(mount_params)
+    end
 
-  def generate_random_password
-    @password = SecureRandom.hex(6)
-  end
+    def mount_params
+      {
+        name: params[:name],
+        email: params[:email],
+        password: params[:password] || generate_random_password,
+        role: params[:role],
+        company: company
+      }
+    end
 
-  def send_email(user)
-    UserMailer.with(user: user, password: password).welcome_message.deliver_now
+    def generate_random_password
+      @password = SecureRandom.hex(6)
+    end
+
+    def send_email(user)
+      UserMailer.with(user: user, password: password).welcome_message.deliver_now
+    end
   end
 end

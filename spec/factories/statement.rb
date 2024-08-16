@@ -1,8 +1,10 @@
+# frozen_string_literal: true
+
 FactoryBot.define do
   factory :statement, class: Statement do
     performed_at { DateTime.now }
     cost { 1200 }
-    merchant { "Uber *UBER *TRIP" }
+    merchant { 'Uber *UBER *TRIP' }
     transaction_id { '3e85a730-bb1f-451b-9a39-47c55aa054db' }
     status { Statement::UNPROVEN_STATUS }
     card { create(:card) }

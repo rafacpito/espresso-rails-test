@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class StatementSerializer < ActiveModel::Serializer
   attributes :id, :performed_at, :cost, :merchant, :transaction_id, :status, :user
 

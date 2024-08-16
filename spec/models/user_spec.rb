@@ -1,16 +1,17 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
-RSpec.describe User, type: :model do
-
-  context 'validations' do
+RSpec.describe User do
+  context 'with validations' do
     it { is_expected.to validate_presence_of(:email) }
     it { is_expected.to validate_presence_of(:name) }
     it { is_expected.to validate_presence_of(:role) }
   end
- 
-  context 'associations' do
-    it { should belong_to(:company) }
-    it { should have_one(:card) }
+
+  context 'with associations' do
+    it { is_expected.to belong_to(:company) }
+    it { is_expected.to have_one(:card) }
   end
 
   describe '#admin?' do
@@ -19,13 +20,13 @@ RSpec.describe User, type: :model do
 
     context 'when user is admin' do
       it 'returns true' do
-        expect(user_admin.admin?).to be_truthy
+        expect(user_admin).to be_admin
       end
     end
 
     context 'when user is employee' do
       it 'returns false' do
-        expect(user_employee.admin?).to be_falsey
+        expect(user_employee).not_to be_admin
       end
     end
   end

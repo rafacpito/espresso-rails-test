@@ -44,27 +44,27 @@ gem 'shakapacker', '~> 8.0'
 # Use react-rails to use React with Rails
 gem 'react-rails', '~> 3.2', '>= 3.2.1'
 
+gem 'active_model_serializers'
 gem 'devise'
 gem 'devise-jwt'
-gem 'active_model_serializers'
 gem 'rack-cors'
 # Validate CPF/CNPJ
-gem "cpf_cnpj"
+gem 'cpf_cnpj'
 
+gem 'cancancan'
 gem 'carrierwave'
 gem 'cloudinary'
-gem "paranoia", "~> 2.2"
-gem "ransack"
-gem "kaminari"
-gem 'cancancan'
-gem "figaro"
-gem "ffi", '~> 1.16.3'
+gem 'ffi', '~> 1.16.3'
+gem 'figaro'
+gem 'kaminari'
+gem 'paranoia', '~> 2.2'
+gem 'ransack'
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'byebug', platforms: %i[mri mingw x64_mingw]
-  gem 'factory_bot_rails'
   gem 'cpf_faker'
+  gem 'factory_bot_rails'
   gem 'faker'
   gem 'rails-controller-testing'
 
@@ -91,8 +91,8 @@ end
 
 group :test do
   # Use simplecov to track test coverage
-  gem 'simplecov', '~> 0.22.0', require: false
   gem 'shoulda-matchers'
+  gem 'simplecov', '~> 0.22.0', require: false
 end
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem

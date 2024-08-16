@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 RSpec.describe UsersController do
@@ -8,18 +10,18 @@ RSpec.describe UsersController do
 
   before { sign_in(admin) }
 
-  describe "GET list" do 
-    context 'not signed in' do
+  describe 'GET list' do
+    context 'when not signed in' do
       before { sign_out(admin) }
-  
-      it "redirect to home(login)" do 
+
+      it 'redirect to home(login)' do
         get :list
         expect(response).to redirect_to root_path
       end
     end
 
-    context 'signed in' do
-      it "renders users#list" do 
+    context 'when signed in' do
+      it 'renders users#list' do
         get :list
         expect(response).to render_template :list
       end
@@ -40,10 +42,11 @@ RSpec.describe UsersController do
       }
     end
 
-    context 'valid_params sending company values' do
+    context 'when valid_params sending company values' do
+      let(:body) { JSON.parse(response.body) }
+
       before do
         post :create, params: { user: params }
-        @body = JSON.parse(response.body)
       end
 
       it 'returns created status code' do
@@ -51,15 +54,15 @@ RSpec.describe UsersController do
       end
 
       it 'response keys matchs body keys' do
-        expect(@body.keys).to contain_exactly(*response_keys)
+        expect(body.keys).to match_array(response_keys)
       end
 
       it 'user keys to match expected user keys' do
-        expect(@body['user'].keys).to contain_exactly(*user_keys)
+        expect(body['user'].keys).to match_array(user_keys)
       end
     end
 
-    context 'valid_params sending company id' do
+    context 'when valid_params sending company id' do
       let(:params) do
         {
           name: 'teste',
@@ -69,9 +72,10 @@ RSpec.describe UsersController do
           company_id: admin.company_id
         }
       end
+      let(:body) { JSON.parse(response.body) }
+
       before do
         post :create, params: { user: params }
-        @body = JSON.parse(response.body)
       end
 
       it 'returns created status code' do
@@ -79,11 +83,11 @@ RSpec.describe UsersController do
       end
 
       it 'response keys matchs body keys' do
-        expect(@body.keys).to contain_exactly(*response_keys)
+        expect(body.keys).to match_array(response_keys)
       end
 
       it 'user keys to match expected user keys' do
-        expect(@body['user'].keys).to contain_exactly(*user_keys)
+        expect(body['user'].keys).to match_array(user_keys)
       end
     end
 
@@ -97,6 +101,7 @@ RSpec.describe UsersController do
           company_id: 'aa'
         }
       end
+
       before do
         post :create, params: { user: params_invalid }
       end
@@ -116,6 +121,7 @@ RSpec.describe UsersController do
           company_id: admin.company_id
         }
       end
+
       before do
         post :create, params: { user: params_invalid }
       end
@@ -127,20 +133,21 @@ RSpec.describe UsersController do
   end
 
   describe 'DELETE destroy' do
-    context 'not signed in' do
+    context 'when not signed in' do
       before { sign_out(admin) }
 
-      it "redirect to home(login)" do 
+      it 'redirect to home(login)' do
         delete :destroy, params: { id: employee.id }
         expect(response).to redirect_to root_path
       end
     end
 
-    context 'signed in' do
-      context 'valid_params' do
+    context 'when signed in' do
+      context 'with valid_params' do
+        let(:body) { JSON.parse(response.body) }
+
         before do
           delete :destroy, params: { id: employee.id }
-          @body = JSON.parse(response.body)
         end
 
         it 'returns created status code' do
@@ -148,11 +155,11 @@ RSpec.describe UsersController do
         end
 
         it 'response keys matchs body keys' do
-          expect(@body.keys).to contain_exactly(*response_keys)
+          expect(body.keys).to match_array(response_keys)
         end
 
         it 'user keys to match expected user keys' do
-          expect(@body['user'].keys).to contain_exactly(*user_keys)
+          expect(body['user'].keys).to match_array(user_keys)
         end
       end
 
@@ -167,7 +174,9 @@ RSpec.describe UsersController do
       end
 
       context 'when user has card with statement' do
-        let(:employee_with_card_with_statement) { create(:user, :employee, :with_card_with_statement, company: admin.company) }
+        let(:employee_with_card_with_statement) do
+          create(:user, :employee, :with_card_with_statement, company: admin.company)
+        end
 
         before do
           delete :destroy, params: { id: employee_with_card_with_statement.id }
@@ -181,20 +190,21 @@ RSpec.describe UsersController do
   end
 
   describe 'PUT update' do
-    context 'not signed in' do
+    context 'when not signed in' do
       before { sign_out(admin) }
 
-      it "redirect to home(login)" do 
+      it 'redirect to home(login)' do
         put :update, params: { id: employee.id, user: { name: 'teste' } }
         expect(response).to redirect_to root_path
       end
     end
 
-    context 'signed in' do
-      context 'valid_params' do
+    context 'when signed in' do
+      context 'with valid_params' do
+        let(:body) { JSON.parse(response.body) }
+
         before do
           put :update, params: { id: employee.id, user: { name: 'teste', email: Faker::Internet.email } }
-          @body = JSON.parse(response.body)
         end
 
         it 'returns created status code' do
@@ -202,11 +212,11 @@ RSpec.describe UsersController do
         end
 
         it 'response keys matchs body keys' do
-          expect(@body.keys).to contain_exactly(*response_keys)
+          expect(body.keys).to match_array(response_keys)
         end
 
         it 'user keys to match expected user keys' do
-          expect(@body['user'].keys).to contain_exactly(*user_keys)
+          expect(body['user'].keys).to match_array(user_keys)
         end
       end
 
@@ -233,23 +243,23 @@ RSpec.describe UsersController do
   end
 
   describe 'GET index_employees' do
-    context 'not signed in' do
+    context 'when not signed in' do
       before { sign_out(admin) }
 
-      it "redirect to home(login)" do 
+      it 'redirect to home(login)' do
         get :index_employees, params: {}
         expect(response).to redirect_to root_path
       end
     end
 
-    context 'signed in' do
+    context 'when signed in' do
       let(:response_list_keys) { %w[users meta] }
       let(:meta_keys) { %w[per_page current_page total_pages total_count] }
-      let!(:employee) { create(:user, :employee, company: admin.company) }
+      let(:body) { JSON.parse(response.body) }
 
       before do
+        create(:user, :employee, company: admin.company)
         get :index_employees, params: {}
-        @body = JSON.parse(response.body)
       end
 
       it 'returns created status code' do
@@ -257,17 +267,17 @@ RSpec.describe UsersController do
       end
 
       it 'response keys matchs body keys' do
-        expect(@body.keys).to contain_exactly(*response_list_keys)
+        expect(body.keys).to match_array(response_list_keys)
       end
 
       it 'match with meta keys' do
-        expect(@body['meta'].keys).to contain_exactly(*meta_keys)
+        expect(body['meta'].keys).to match_array(meta_keys)
       end
 
       it 'user keys to match expected user keys' do
-        expect(@body['users']).to be_present
-        @body['users'].each do |user|
-          expect(user.keys).to contain_exactly(*user_keys)
+        expect(body['users']).to be_present
+        body['users'].each do |user|
+          expect(user.keys).to match_array(user_keys)
         end
       end
     end

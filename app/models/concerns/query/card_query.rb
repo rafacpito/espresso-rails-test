@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module CardQuery
   extend ActiveSupport::Concern
   include BaseQuery
@@ -12,13 +14,13 @@ module CardQuery
 
       {
         id_eq: params[:id],
-        user_company_id_eq: params[:company_id],
+        user_company_id_eq: params[:company_id]
       }
     end
 
     def format_order(order = '')
       return order if order.present?
- 
+
       ['id DESC']
     end
   end

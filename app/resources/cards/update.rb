@@ -1,21 +1,25 @@
-class Cards::Update
-  attr_accessor :id, :params, :current_user
+# frozen_string_literal: true
 
-  def initialize(id, params, current_user)
-    @id = id
-    @params = params
-    @current_user = current_user
-  end
+module Cards
+  class Update
+    attr_accessor :id, :params, :current_user
 
-  def execute
-    card = Card.joins(:user).find_by!(id: id, users: { company_id: current_user.company_id })
-    card.update!(user: find_user!)
-    card
-  end
+    def initialize(id, params, current_user)
+      @id = id
+      @params = params
+      @current_user = current_user
+    end
 
-  private
+    def execute
+      card = Card.joins(:user).find_by!(id: id, users: { company_id: current_user.company_id })
+      card.update!(user: find_user!)
+      card
+    end
 
-  def find_user!
-    User.find_by!(email: params[:user_email], role: User::EMPLOYEE_ROLE)
+    private
+
+    def find_user!
+      User.find_by!(email: params[:user_email], role: User::EMPLOYEE_ROLE)
+    end
   end
 end

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 RSpec.describe Companies::Create do
@@ -9,27 +11,23 @@ RSpec.describe Companies::Create do
   end
 
   describe '#initialize' do
-    before do
-      @instance = described_class.new(params)
-    end
+    let(:instance) { described_class.new(params) }
 
     it 'params to be instancied' do
-      expect(@instance.params).to eq(params)
+      expect(instance.params).to eq(params)
     end
   end
 
   describe '#execute' do
     context 'when params are valids' do
-      before do
-        @response = described_class.new(params).execute
-      end
+      let(:response) { described_class.new(params).execute }
 
       it 'returns category object' do
-        expect(@response.class).to eq(Company)
+        expect(response.class).to eq(Company)
       end
 
       it 'object persisted' do
-        expect(@response.persisted?).to be_truthy
+        expect(response).to be_persisted
       end
     end
 
@@ -40,31 +38,25 @@ RSpec.describe Companies::Create do
           cnpj: nil
         }
       end
-
-      before do
-        @instance = described_class.new(invalid_params)
-      end
+      let(:response) { described_class.new(invalid_params).execute }
 
       it 'raises ActiveRecord::RecordInvalid exception' do
-        expect { @instance.execute }.to raise_error(ActiveRecord::RecordInvalid)
+        expect { response }.to raise_error(ActiveRecord::RecordInvalid)
       end
     end
 
-    context 'CNPJ not unique' do
-      let(:company) { create(:company)}
+    context 'when CNPJ not unique' do
+      let(:company) { create(:company) }
       let(:invalid_params) do
         {
           name: 'teste',
           cnpj: company.cnpj
         }
       end
-
-      before do
-        @instance = described_class.new(invalid_params)
-      end
+      let(:response) { described_class.new(invalid_params).execute }
 
       it 'raises ActiveRecord::RecordInvalid exception' do
-        expect { @instance.execute }.to raise_error(ActiveRecord::RecordInvalid)
+        expect { response }.to raise_error(ActiveRecord::RecordInvalid)
       end
     end
   end

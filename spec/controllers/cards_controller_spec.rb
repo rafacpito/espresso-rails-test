@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 RSpec.describe CardsController do
@@ -9,18 +11,18 @@ RSpec.describe CardsController do
 
   before { sign_in(admin) }
 
-  describe "GET list" do 
-    context 'not signed in' do
+  describe 'GET list' do
+    context 'when not signed in' do
       before { sign_out(admin) }
-  
-      it "redirect to home(login)" do 
+
+      it 'redirect to home(login)' do
         get :list
         expect(response).to redirect_to root_path
       end
     end
 
-    context 'signed in' do
-      it "renders cards#list" do 
+    context 'when signed in' do
+      it 'renders cards#list' do
         get :list
         expect(response).to render_template :list
       end
@@ -28,20 +30,21 @@ RSpec.describe CardsController do
   end
 
   describe 'POST create' do
-    context 'not signed in' do
+    context 'when not signed in' do
       before { sign_out(admin) }
 
-      it "redirect to home(login)" do 
+      it 'redirect to home(login)' do
         post :create, params: { card: { user_id: employee.id, last4: '1234' } }
         expect(response).to redirect_to root_path
       end
     end
 
-    context 'signed in' do
-      context 'valid_params' do
+    context 'when signed in' do
+      context 'with valid_params' do
+        let(:body) { JSON.parse(response.body) }
+
         before do
           post :create, params: { card: { user_id: employee.id, last4: '1234' } }
-          @body = JSON.parse(response.body)
         end
 
         it 'returns created status code' do
@@ -49,11 +52,11 @@ RSpec.describe CardsController do
         end
 
         it 'response keys matchs body keys' do
-          expect(@body.keys).to contain_exactly(*response_keys)
+          expect(body.keys).to match_array(response_keys)
         end
 
         it 'card keys to match expected card keys' do
-          expect(@body['card'].keys).to contain_exactly(*card_keys)
+          expect(body['card'].keys).to match_array(card_keys)
         end
       end
 
@@ -90,20 +93,21 @@ RSpec.describe CardsController do
   end
 
   describe 'DELETE destroy' do
-    context 'not signed in' do
+    context 'when not signed in' do
       before { sign_out(admin) }
 
-      it "redirect to home(login)" do 
+      it 'redirect to home(login)' do
         delete :destroy, params: { id: card.id }
         expect(response).to redirect_to root_path
       end
     end
 
-    context 'signed in' do
-      context 'valid_params' do
+    context 'when signed in' do
+      context 'with valid_params' do
+        let(:body) { JSON.parse(response.body) }
+
         before do
           delete :destroy, params: { id: card.id }
-          @body = JSON.parse(response.body)
         end
 
         it 'returns created status code' do
@@ -111,11 +115,11 @@ RSpec.describe CardsController do
         end
 
         it 'response keys matchs body keys' do
-          expect(@body.keys).to contain_exactly(*response_keys)
+          expect(body.keys).to match_array(response_keys)
         end
 
         it 'card keys to match expected card keys' do
-          expect(@body['card'].keys).to contain_exactly(*card_keys)
+          expect(body['card'].keys).to match_array(card_keys)
         end
       end
 
@@ -145,20 +149,22 @@ RSpec.describe CardsController do
 
   describe 'PUT update' do
     let(:new_employee) { create(:user, :employee, company: admin.company) }
-    context 'not signed in' do
+
+    context 'when not signed in' do
       before { sign_out(admin) }
 
-      it "redirect to home(login)" do 
+      it 'redirect to home(login)' do
         put :update, params: { id: card.id, card: { user_email: new_employee.email } }
         expect(response).to redirect_to root_path
       end
     end
 
-    context 'signed in' do
-      context 'valid_params' do
+    context 'when signed in' do
+      context 'with valid_params' do
+        let(:body) { JSON.parse(response.body) }
+
         before do
           put :update, params: { id: card.id, card: { user_email: new_employee.email } }
-          @body = JSON.parse(response.body)
         end
 
         it 'returns created status code' do
@@ -166,11 +172,11 @@ RSpec.describe CardsController do
         end
 
         it 'response keys matchs body keys' do
-          expect(@body.keys).to contain_exactly(*response_keys)
+          expect(body.keys).to match_array(response_keys)
         end
 
         it 'card keys to match expected card keys' do
-          expect(@body['card'].keys).to contain_exactly(*card_keys)
+          expect(body['card'].keys).to match_array(card_keys)
         end
       end
 
@@ -197,23 +203,23 @@ RSpec.describe CardsController do
   end
 
   describe 'GET index' do
-    context 'not signed in' do
+    context 'when not signed in' do
       before { sign_out(admin) }
 
-      it "redirect to home(login)" do 
+      it 'redirect to home(login)' do
         get :index, params: {}
         expect(response).to redirect_to root_path
       end
     end
 
-    context 'signed in' do
+    context 'when signed in' do
       let(:response_list_keys) { %w[cards meta] }
       let(:meta_keys) { %w[per_page current_page total_pages total_count] }
-      let!(:card) { create(:card, user: employee) }
+      let(:body) { JSON.parse(response.body) }
 
       before do
+        create(:card, user: employee)
         get :index, params: {}
-        @body = JSON.parse(response.body)
       end
 
       it 'returns created status code' do
@@ -221,17 +227,17 @@ RSpec.describe CardsController do
       end
 
       it 'response keys matchs body keys' do
-        expect(@body.keys).to contain_exactly(*response_list_keys)
+        expect(body.keys).to match_array(response_list_keys)
       end
 
       it 'match with meta keys' do
-        expect(@body['meta'].keys).to contain_exactly(*meta_keys)
+        expect(body['meta'].keys).to match_array(meta_keys)
       end
 
       it 'card keys to match expected card keys' do
-        expect(@body['cards']).to be_present
-        @body['cards'].each do |card|
-          expect(card.keys).to contain_exactly(*card_keys)
+        expect(body['cards']).to be_present
+        body['cards'].each do |card|
+          expect(card.keys).to match_array(card_keys)
         end
       end
     end

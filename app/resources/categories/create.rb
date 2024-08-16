@@ -1,21 +1,25 @@
-class Categories::Create
-  attr_accessor :params, :current_user
+# frozen_string_literal: true
 
-  def initialize(params, current_user)
-    @params = params
-    @current_user = current_user
-  end
+module Categories
+  class Create
+    attr_accessor :params, :current_user
 
-  def execute
-    Category.create!(mount_params)
-  end
+    def initialize(params, current_user)
+      @params = params
+      @current_user = current_user
+    end
 
-  private
+    def execute
+      Category.create!(mount_params)
+    end
 
-  def mount_params
-    {
-      name: params[:name],
-      company_id: current_user.company.id
-    }
+    private
+
+    def mount_params
+      {
+        name: params[:name],
+        company_id: current_user.company.id
+      }
+    end
   end
 end
