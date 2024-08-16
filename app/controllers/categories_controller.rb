@@ -8,12 +8,12 @@ class CategoriesController < ApplicationController
   end
 
   def destroy
-    category = Categories::Destroy.new(params[:id]).execute
+    category = Categories::Destroy.new(params[:id], current_user).execute
     render json: category, serializer: CategorySerializer, status: :ok
   end
 
   def update
-    category = Categories::Update.new(params[:id], category_params).execute
+    category = Categories::Update.new(params[:id], category_params, current_user).execute
     render json: category, serializer: CategorySerializer, status: :ok
   end
 

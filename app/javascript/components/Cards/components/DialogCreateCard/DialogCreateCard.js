@@ -43,7 +43,7 @@ const DialogCreateCard = ({
   const onSubmit = (data) => {
     const csrf = document.querySelector("meta[name='csrf-token']").getAttribute("content")
 
-    axios.post(`${helpers.functions.setUrl(process.env.NODE_ENV)}/cards/create`,
+    axios.post(`${helpers.functions.setUrl(process.env.NODE_ENV)}/cards`,
       JSON.stringify({
         card: {
           last4: data.last4,

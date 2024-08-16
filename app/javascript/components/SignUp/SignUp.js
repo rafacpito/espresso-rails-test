@@ -51,7 +51,7 @@ const SignUp = () => {
   const onSubmit = (data) => {
     const csrf = document.querySelector("meta[name='csrf-token']").getAttribute("content")
 
-    axios.post(`${helpers.functions.setUrl(process.env.NODE_ENV)}/users/create`,
+    axios.post(`${helpers.functions.setUrl(process.env.NODE_ENV)}/users`,
       JSON.stringify({
         user: {
           name: data.name,

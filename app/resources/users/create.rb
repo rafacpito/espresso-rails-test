@@ -28,10 +28,8 @@ class Users::Create
 
   def mount_params_to_company
     {
-      company: {
-        name: params[:company][:name],
-        cnpj: params[:company][:cnpj]
-      }
+      name: params[:company][:name],
+      cnpj: params[:company][:cnpj]
     }
   end
 

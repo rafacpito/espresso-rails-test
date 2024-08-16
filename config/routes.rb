@@ -13,7 +13,7 @@ Rails.application.routes.draw do
 
   # Usuários
   get '/signup', to: 'users#sign_up'
-  post '/users/create', to: 'users#create'
+  post '/users', to: 'users#create'
   get '/employees/list', to: 'users#list'
   get '/employees', to: 'users#index_employees'
   delete '/users/:id', to: 'users#destroy'
@@ -30,14 +30,14 @@ Rails.application.routes.draw do
   # Categorias
   get '/categories/list', to: 'categories#list'  
   get '/categories', to: 'categories#index'
-  post '/categories/create', to: 'categories#create'
+  post '/categories', to: 'categories#create'
   delete '/categories/:id', to: 'categories#destroy'
   put '/categories/:id', to: 'categories#update'
 
   # Cartões
   get '/cards/list', to: 'cards#list'  
   get '/cards', to: 'cards#index'
-  post '/cards/create', to: 'cards#create'
+  post '/cards', to: 'cards#create'
   delete '/cards/:id', to: 'cards#destroy'
   put '/cards/:id', to: 'cards#update'
 end

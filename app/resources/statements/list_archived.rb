@@ -7,6 +7,15 @@ class Statements::ListArchived
   end
 
   def execute
-    Statement.with_deleted.__search({ card_id: current_user.company.cards.map(&:id), deleted: true, per_page: params[:per_page], page: params[:page] })
+    Statement.with_deleted.__search({ card_id: find_company_cards, deleted: true, per_page: params[:per_page], page: params[:page] })
+  end
+
+  private
+
+  def find_company_cards
+    company_cards = current_user.company.cards.map(&:id)
+    return company_cards if company_cards.present?
+
+    [0]
   end
 end

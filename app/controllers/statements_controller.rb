@@ -1,7 +1,7 @@
 class StatementsController < ApplicationController
-  protect_from_forgery with: :null_session, only: [:create]
-  load_and_authorize_resource except: [:create]
   before_action :authenticate_user!, except: [:create]
+  load_and_authorize_resource except: [:create]
+  protect_from_forgery with: :null_session, only: [:create]
 
   def list; end
 
@@ -21,12 +21,12 @@ class StatementsController < ApplicationController
   end
 
   def destroy
-    statement = Statements::Destroy.new(params[:id]).execute
+    statement = Statements::Destroy.new(params[:id], current_user).execute
     render json: statement, serializer: StatementSerializer, status: :ok
   end
 
   def update
-    statement = Statements::Update.new(params[:id], statement_params).execute
+    statement = Statements::Update.new(params[:id], statement_params, current_user).execute
     render json: statement, serializer: StatementSerializer, status: :ok
   end
 

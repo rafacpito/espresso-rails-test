@@ -11,12 +11,12 @@ class UsersController < ApplicationController
   end
 
   def destroy
-    user = Users::Destroy.new(params[:id]).execute
+    user = Users::Destroy.new(params[:id], current_user).execute
     render json: user, serializer: UserSerializer, status: :ok
   end
 
   def update
-    user = Users::Update.new(params[:id], user_params).execute
+    user = Users::Update.new(params[:id], user_params, current_user).execute
     render json: user, serializer: UserSerializer, status: :ok
   end
 

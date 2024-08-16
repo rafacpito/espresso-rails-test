@@ -30,7 +30,7 @@ const Main = () => {
   const onSubmit = (data) => {
     const csrf = document.querySelector("meta[name='csrf-token']").getAttribute("content")
 
-    axios.post(`${helpers.functions.setUrl(process.env.NODE_ENV)}/login`,
+    axios.post(`${helpers.functions.setUrl(process.env.NODE_ENV)}/sign_in`,
       JSON.stringify({
         user: {
           email: data.email,

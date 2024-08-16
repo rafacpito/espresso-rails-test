@@ -12,7 +12,7 @@
 
 ActiveRecord::Schema.define(version: 2024_08_14_075659) do
 
-  create_table "attachments", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|
+  create_table "attachments", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb3", force: :cascade do |t|
     t.json "file", null: false
     t.bigint "statement_id"
     t.datetime "created_at", null: false
@@ -20,7 +20,7 @@ ActiveRecord::Schema.define(version: 2024_08_14_075659) do
     t.index ["statement_id"], name: "index_attachments_on_statement_id"
   end
 
-  create_table "cards", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|
+  create_table "cards", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb3", force: :cascade do |t|
     t.string "last4", null: false
     t.bigint "user_id"
     t.datetime "created_at", null: false
@@ -28,7 +28,7 @@ ActiveRecord::Schema.define(version: 2024_08_14_075659) do
     t.index ["user_id"], name: "index_cards_on_user_id"
   end
 
-  create_table "categories", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|
+  create_table "categories", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb3", force: :cascade do |t|
     t.string "name", null: false
     t.bigint "company_id"
     t.datetime "created_at", null: false
@@ -36,12 +36,14 @@ ActiveRecord::Schema.define(version: 2024_08_14_075659) do
     t.index ["company_id"], name: "index_categories_on_company_id"
   end
 
-  create_table "companies", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|
+  create_table "companies", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb3", force: :cascade do |t|
     t.string "name", null: false
     t.string "cnpj", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
-  create_table "jwt_blacklists", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|
+  create_table "jwt_blacklists", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb3", force: :cascade do |t|
     t.string "jti"
     t.datetime "exp"
     t.datetime "created_at", null: false
@@ -49,7 +51,7 @@ ActiveRecord::Schema.define(version: 2024_08_14_075659) do
     t.index ["jti"], name: "index_jwt_blacklists_on_jti"
   end
 
-  create_table "statements", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|
+  create_table "statements", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb3", force: :cascade do |t|
     t.datetime "performed_at", null: false
     t.integer "cost", null: false
     t.string "merchant", null: false
@@ -65,7 +67,7 @@ ActiveRecord::Schema.define(version: 2024_08_14_075659) do
     t.index ["deleted_at"], name: "index_statements_on_deleted_at"
   end
 
-  create_table "users", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|
+  create_table "users", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb3", force: :cascade do |t|
     t.string "email", default: "", null: false
     t.string "encrypted_password", default: "", null: false
     t.string "reset_password_token"

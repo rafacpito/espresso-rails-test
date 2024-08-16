@@ -1,6 +1,6 @@
 class Company < ApplicationRecord
   validates :name, :cnpj, presence: true
-  validates :cnpj, uniqueness: true
+  validates :cnpj, uniqueness: true, case_sensitive: false
   validate :validate_cnpj
 
   has_many :users

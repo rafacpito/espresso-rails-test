@@ -85,6 +85,7 @@ const DialogEditStatement = ({
     <Dialog
       open={open}
       onClose={() => {
+        reset()
         setFileName('')
         setOpen(false)
       }}
@@ -97,6 +98,7 @@ const DialogEditStatement = ({
       <IconButton
         aria-label="close"
         onClick={() => {
+          reset()
           setFileName('')
           setOpen(false)
         }}

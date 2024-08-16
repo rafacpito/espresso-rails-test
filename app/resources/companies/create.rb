@@ -6,6 +6,6 @@ class Companies::Create
   end
 
   def execute
-    Company.create!(params[:company])
+    Company.create!(params)
   end
 end

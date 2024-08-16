@@ -14,9 +14,8 @@ class Ability
     can :manage, Card
     can :manage, Category
     can :manage, Company
-    can :manage, Statement
     can :manage, User
-    can [:read, :destroy], Statement 
+    can [:read, :destroy, :list, :index_archived], Statement 
   end
 
   def normal_permissions(user)
