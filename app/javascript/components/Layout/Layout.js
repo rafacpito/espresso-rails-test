@@ -32,7 +32,7 @@ const Layout = ({ children, user }) => {
   const logout = () => {
     const csrf = document.querySelector("meta[name='csrf-token']").getAttribute("content")
 
-    axios.delete(`${helpers.functions.setUrl(process.env.NODE_ENV)}/sign_out`, {
+    axios.delete(`${helpers.functions.setUrl(process.env.NODE_ENV)}/logout`, {
       headers: {
         'X-CSRF-Token': csrf
       },
