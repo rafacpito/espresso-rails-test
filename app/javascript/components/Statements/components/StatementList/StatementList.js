@@ -21,6 +21,7 @@ import {
 } from '@mui/icons-material'
 import { useState } from 'react'
 import { DialogConfirmArchive, DialogEditStatement } from '../'
+import { styles } from './styles.js'
 
 const Statement = ({
   user,
@@ -119,7 +120,7 @@ const Statement = ({
               <TableCell scope="row" sx={{ width: '5px', paddingRight: '0' }}>
                 <Avatar>
                   {statement?.attachment?.file != null ? (
-                    <img src={statement?.attachment?.file?.secure_url} />
+                    <img src={statement?.attachment?.file?.secure_url} style={styles.image} />
                   ) : (
                     <ReceiptIcon />
                   )}
