@@ -24,7 +24,7 @@ import {
 } from '@mui/icons-material'
 import { styles } from './styles.js'
 import axios from 'axios'
-import helpers from 'helpers'
+import helpers from '../../helpers'
 
 const Layout = ({ children, user }) => {
   const [open, setOpen] = useState(false)
@@ -36,11 +36,9 @@ const Layout = ({ children, user }) => {
       headers: {
         'X-CSRF-Token': csrf
       },
-    }).then((response) => {
-      if (response.status == 200) {
-        window.location.href = '/'
-      }
-    }).catch(error => console.log(error.message))
+    }).then(() => {
+      window.location.href = '/'
+    })
   }
 
   const toggleDrawer = (newOpen) => {
@@ -82,6 +80,7 @@ const Layout = ({ children, user }) => {
       <AppBar position="static">
         <Toolbar style={styles.toolbar}>
           <IconButton
+            data-testid='open-menu'
             size="large"
             edge="start"
             color="inherit"
@@ -126,6 +125,7 @@ const Layout = ({ children, user }) => {
             </Typography>
           </Box>
           <IconButton
+            data-testid='logout-button'
             size="large"
             edge="start"
             color="inherit"

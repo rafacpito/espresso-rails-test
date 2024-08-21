@@ -88,8 +88,8 @@ const Statement = ({
     <Box mt={6}>
       {user.role == 1 ? (
         <Tabs value={currentTabIndex} onChange={(e, tabIndex) => { handleTabChange(tabIndex) }} aria-label="basic tabs example">
-          <Tab label="Lista" />
-          <Tab label="Arquivadas" />
+          <Tab data-testid='list-tab' label="Lista" />
+          <Tab data-testid='archived-tab' label="Arquivadas" />
         </Tabs>
       ) : ''}
       <Table sx={{ minWidth: 650 }} aria-label="simple table">
@@ -181,6 +181,7 @@ const Statement = ({
                 user.role == 1 ? (
                   <TableCell align="right">
                     <IconButton
+                      data-testid='archive-button'
                       aria-label="close"
                       onClick={() => { openDialogConfirmArchive(statement, index) }}
                     >
@@ -195,6 +196,7 @@ const Statement = ({
                 ) : (
                   <TableCell align="right">
                     <IconButton
+                      data-testid='edit-button'
                       aria-label="close"
                       onClick={() => { openEditStatementDialog(statement, index) }}
                     >

@@ -19,7 +19,6 @@ import { DialogConfirmDeletion, DialogEditEmployee } from '../'
 
 const EmployeeList = ({
   employees,
-  setEmployees,
   page,
   setPage,
   rowsPerPage,
@@ -35,7 +34,6 @@ const EmployeeList = ({
   const [deleteIndex, setDeleteIndex] = useState()
   const [deleteEmployee, setDeleteEmployee] = useState({})
   const [openEdit, setOpenEdit] = useState(false)
-  const [editIndex, setEditIndex] = useState()
   const [editEmployee, setEditEmployee] = useState({})
 
   const defineAvatarLetters = (employee) => {
@@ -55,9 +53,8 @@ const EmployeeList = ({
     setOpenDeletion(true)
   }
 
-  const openDialogEditEmployee = (employee, index) => {
+  const openDialogEditEmployee = (employee) => {
     setEditEmployee(employee)
-    setEditIndex(index)
     setOpenEdit(true)
   }
 
@@ -87,7 +84,7 @@ const EmployeeList = ({
               key={employee.id}
             >
               <TableCell scope="row" sx={{ width: '5px', paddingRight: '0' }}>
-                <Avatar children={defineAvatarLetters(employee)} />
+                <Avatar data-testid={`avatar-${employee.id}`} children={defineAvatarLetters(employee)} />
               </TableCell>
               <TableCell scope="row">
                 <Box display='flex' flexDirection='column'>
@@ -104,7 +101,7 @@ const EmployeeList = ({
                   variant='outlined'
                   size="small"
                   onClick={() =>
-                    openDialogEditEmployee(employee, index)
+                    openDialogEditEmployee(employee)
                   }
                   style={styles.editButton}
                 >

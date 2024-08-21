@@ -20,7 +20,6 @@ import { DialogConfirmDeletion, DialogEditCategory } from '../'
 
 const CategoryList = ({
   categories,
-  setCategories,
   page,
   setPage,
   rowsPerPage,
@@ -44,7 +43,7 @@ const CategoryList = ({
     setOpenDeletion(true)
   }
 
-  const openDialogEditCategory = (category, index) => {
+  const openDialogEditCategory = (category) => {
     setEditCategory(category)
     setOpenEdit(true)
   }
@@ -90,7 +89,7 @@ const CategoryList = ({
                   variant='outlined'
                   size="small"
                   onClick={() =>
-                    openDialogEditCategory(category, index)
+                    openDialogEditCategory(category)
                   }
                   style={styles.editButton}
                 >

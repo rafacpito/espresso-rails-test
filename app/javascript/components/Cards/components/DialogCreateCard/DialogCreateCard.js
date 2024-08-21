@@ -1,4 +1,3 @@
-import { useState } from 'react'
 import {
   Typography,
   Button,
@@ -14,10 +13,11 @@ import {
   Close as CloseIcon
 } from '@mui/icons-material'
 import axios from 'axios'
-import { useForm, Controller } from "react-hook-form"
+import { useForm } from "react-hook-form"
 import schema from './schema'
 import { yupResolver } from '@hookform/resolvers/yup'
-import helpers from 'helpers'
+import helpers from '../../../../helpers'
+
 
 const DialogCreateCard = ({
   open,
@@ -32,10 +32,9 @@ const DialogCreateCard = ({
 }) => {
   const {
     register,
-    control,
     handleSubmit,
     reset,
-    formState: { errors }
+    formState: { errors },
   } = useForm({
     resolver: yupResolver(schema),
   })
@@ -55,19 +54,21 @@ const DialogCreateCard = ({
           'Content-Type': 'application/json',
           'X-CSRF-Token': csrf
         },
-      }).then(response => {
-        if (response.status == 201) {
-          setSuccessMessage('Cartão criado com sucesso!')
-          setOpenSuccessSnackbar(true)
-          setRefresh(refresh + 1)
-          setOpen(false)
-          reset()
-          setTimeout(() => {
-            setOpenSuccessSnackbar(false)
-          }, "3000")
-        }
+      }).then(() => {
+        setSuccessMessage('Cartão criado com sucesso!')
+        setOpenSuccessSnackbar(true)
+        setRefresh(refresh + 1)
+        setOpen(false)
+        reset()
+        setTimeout(() => {
+          setOpenSuccessSnackbar(false)
+        }, "3000")
       }).catch(error => {
-        setErrorMessage(error.response.data.error.message)
+        if (error?.response?.data?.error?.message != undefined) {
+          setErrorMessage(error.response.data.error.message)
+        } else {
+          setErrorMessage("Erro interno")
+        }
         setOpenErrorSnackbar(true)
       })
   }
@@ -83,6 +84,7 @@ const DialogCreateCard = ({
         Cadastrar cartão
       </DialogTitle>
       <IconButton
+        data-testid="close-dialog"
         aria-label="close"
         onClick={() => { setOpen(false) }}
         sx={{
@@ -99,40 +101,39 @@ const DialogCreateCard = ({
           <TextField
             margin='normal'
             name='last4'
-            label='Nome'
-            type='last4'
-            id='last4'
+            label='Últimos 4 digitos do cartão'
+            type='text'
+            inputProps={{
+              "data-testid": "last4-input",
+            }}
             autoFocus
             fullWidth
-            required
             {...register("last4")}
             error={!!errors?.last4}
             helperText={errors?.last4?.message}
           />
-          <Controller
-            render={({ }) => (
-              <TextField
-                {...register('user_id')}
-                select // tell TextField to render select
-                label="Funcionário"
-                fullWidth
-                defaultValue={[]}
-                required
-              >
-                <MenuItem disabled value="">
-                  <em>Funcionário</em>
-                </MenuItem>
-                {employees.map((employee) =>
-                  <MenuItem key={employee.id} value={employee.id}>{employee.name}</MenuItem>
-                )}
-              </TextField>
-            )}
+          <TextField
             name='user_id'
-            control={control}
-            label='Funcionário'
-          />
+            {...register('user_id')}
+            select
+            label="Funcionário"
+            inputProps={{
+              "data-testid": "user-id-input",
+            }}
+            fullWidth
+            defaultValue={[]}
+            error={!!errors?.user_id}
+            helperText={errors?.user_id?.message}
+          >
+            <MenuItem disabled value="">
+              <em>Funcionário</em>
+            </MenuItem>
+            {employees.map(employee => (
+              <MenuItem key={employee.id} value={employee.id}>{employee.name}</MenuItem>
+            ))}
+          </TextField>
           <Box mt={3}>
-            <Button variant='contained' type='submit' autoFocus>
+            <Button data-testid="create-card" variant='contained' type='submit' autoFocus>
               Cadastrar
             </Button>
           </Box>

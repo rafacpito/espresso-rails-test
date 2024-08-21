@@ -1,4 +1,3 @@
-import { useState } from 'react'
 import {
   Typography,
   Button,
@@ -12,7 +11,7 @@ import {
   Close as CloseIcon
 } from '@mui/icons-material'
 import axios from 'axios'
-import helpers from 'helpers'
+import helpers from '../../../../helpers'
 
 const DialogConfirmDeletion = ({
   open,
@@ -36,21 +35,21 @@ const DialogConfirmDeletion = ({
       headers: {
         'X-CSRF-Token': csrf
       },
-    }).then((response) => {
-      if (response.status == 200) {
-        if (categories.length == 1 & page > 1) setPage(page - 1)
-        setRefresh(refresh + 1)
-        setSuccessMessage('Categoria deletado com sucesso!')
-        setOpenSuccessSnackbar(true)
-        setTimeout(() => {
-          setOpenSuccessSnackbar(false)
-        }, 3000)
-        setOpen(false)
-      } else {
-        return response.text().then(text => { throw new Error(text) })
-      }
+    }).then(() => {
+      if (categories.length == 1 & page > 1) setPage(page - 1)
+      setRefresh(refresh + 1)
+      setSuccessMessage('Categoria deletado com sucesso!')
+      setOpenSuccessSnackbar(true)
+      setTimeout(() => {
+        setOpenSuccessSnackbar(false)
+      }, 3000)
+      setOpen(false)
     }).catch(error => {
-      setErrorMessage(error.response.data.error.message)
+      if (error?.response?.data?.error?.message != undefined) {
+        setErrorMessage(error.response.data.error.message)
+      } else {
+        setErrorMessage("Erro interno")
+      }
       setOpenErrorSnackbar(true)
     })
   }
@@ -64,6 +63,7 @@ const DialogConfirmDeletion = ({
         Deletar categoria
       </DialogTitle>
       <IconButton
+        data-testid="close-delete-dialog"
         aria-label="close"
         onClick={() => { setOpen(false) }}
         sx={{
@@ -80,7 +80,7 @@ const DialogConfirmDeletion = ({
           <Button variant='outlined' onClick={() => { setOpen(false) }} autoFocus sx={{ marginRight: '10px' }}>
             Cancelar
           </Button>
-          <Button variant='contained' onClick={() => { deleteCategory(index) }} autoFocus>
+          <Button data-testid="confirm-click" variant='contained' onClick={() => { deleteCategory(index) }} autoFocus>
             Confirmar
           </Button>
         </Box>

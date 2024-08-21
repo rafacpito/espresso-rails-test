@@ -1,6 +1,5 @@
 import { useEffect } from 'react'
 import {
-  Typography,
   Button,
   TextField,
   IconButton,
@@ -8,7 +7,6 @@ import {
   DialogContent,
   DialogTitle,
   Box,
-  setRef
 } from '@mui/material'
 import {
   Close as CloseIcon
@@ -17,7 +15,7 @@ import axios from 'axios'
 import { useForm } from "react-hook-form"
 import schema from './schema'
 import { yupResolver } from '@hookform/resolvers/yup'
-import helpers from 'helpers'
+import helpers from '../../../../helpers'
 
 const DialogEditCard = ({
   open,
@@ -57,19 +55,21 @@ const DialogEditCard = ({
           'Content-Type': 'application/json',
           'X-CSRF-Token': csrf
         },
-      }).then(response => {
-        if (response.status == 200) {
-          setSuccessMessage('Funcionário associado ao cartão editado com sucesso!')
-          setOpenSuccessSnackbar(true)
-          setRefresh(refresh + 1)
-          setOpen(false)
-          reset()
-          setTimeout(() => {
-            setOpenSuccessSnackbar(false)
-          }, "3000")
-        }
+      }).then(() => {
+        setSuccessMessage('Funcionário associado ao cartão editado com sucesso!')
+        setOpenSuccessSnackbar(true)
+        setRefresh(refresh + 1)
+        setOpen(false)
+        reset()
+        setTimeout(() => {
+          setOpenSuccessSnackbar(false)
+        }, "3000")
       }).catch(error => {
-        setErrorMessage(error.response.data.error.message)
+        if (error?.response?.data?.error?.message != undefined) {
+          setErrorMessage(error.response.data.error.message)
+        } else {
+          setErrorMessage("Erro interno")
+        }
         setOpenErrorSnackbar(true)
       })
   }
@@ -85,6 +85,7 @@ const DialogEditCard = ({
         Associar funcionário
       </DialogTitle>
       <IconButton
+        data-testid="close-edit-dialog"
         aria-label="close"
         onClick={() => { setOpen(false) }}
         sx={{
@@ -98,6 +99,9 @@ const DialogEditCard = ({
       <DialogContent sx={{ paddingTop: '0px' }}>
         <form onSubmit={handleSubmit(onSubmit)}>
           <TextField
+            inputProps={{
+              "data-testid": "user-email-input",
+            }}
             margin='normal'
             name='email'
             label='E-mail'
@@ -111,7 +115,7 @@ const DialogEditCard = ({
             helperText={errors?.email?.message}
           />
           <Box mt={3}>
-            <Button variant='contained' type='submit' autoFocus>
+            <Button data-testid="edit-button" variant='contained' type='submit' autoFocus>
               Editar
             </Button>
           </Box>

@@ -1,16 +1,20 @@
 import React from 'react'
 import Layout from '../Layout'
 import { useEffect, useState } from 'react'
-import { StatementList, DialogCreateStatement } from './components'
+import { StatementList } from './components'
 import {
   Box,
   Typography,
   Container,
   Alert,
-  Snackbar
+  Snackbar,
+  IconButton
 } from '@mui/material'
+import {
+  Close as CloseIcon,
+} from '@mui/icons-material'
 import axios from 'axios'
-import helpers from 'helpers'
+import helpers from '../../helpers'
 
 const Main = (props) => {
   const [openErrorSnackbar, setOpenErrorSnackbar] = useState(false)
@@ -25,32 +29,28 @@ const Main = (props) => {
   const [refresh, setRefresh] = useState(0)
 
   useEffect(() => {
+    axios.get(`${helpers.functions.setUrl(process.env.NODE_ENV)}/categories`).then((response) => {
+      setCategories(response.data.categories)
+    })
+  }, [])
+
+  useEffect(() => {
     if (currentTabIndex === 0) {
       axios.get(`${helpers.functions.setUrl(process.env.NODE_ENV)}/statements?per_page=${rowsPerPage}&page=${page}`).then((response) => {
-        if (response.status == 200) {
-          setStatements(response.data.statements)
-        }
-      }).catch(error => console.log(error.message))
+        setStatements(response.data.statements)
+      })
     } else {
       axios.get(`${helpers.functions.setUrl(process.env.NODE_ENV)}/statements/archived?per_page=${rowsPerPage}&page=${page}`).then((response) => {
-        if (response.status == 200) {
-          setStatements(response.data.statements)
-        }
-      }).catch(error => console.log(error.message))
+        setStatements(response.data.statements)
+      })
     }
-
-    axios.get(`${helpers.functions.setUrl(process.env.NODE_ENV)}/categories`).then((response) => {
-      if (response.status == 200) {
-        setCategories(response.data.categories)
-      }
-    }).catch(error => console.log(error.message))
   }, [currentTabIndex, rowsPerPage, page, refresh])
 
   return (
     <Layout user={props.user}>
       <Container>
         <Box mt={6} display='flex' alignItems='center' justifyContent='space-between'>
-          <Typography variant="h4">Despesas</Typography>
+          <Typography data-testid="statement-title" variant="h4">Despesas</Typography>
         </Box>
 
         <StatementList
@@ -74,11 +74,23 @@ const Main = (props) => {
 
         <Snackbar
           open={openErrorSnackbar}
-          autoHideDuration={6000}
+          autoHideDuration={4000}
           onClose={() => { setOpenErrorSnackbar(false) }}
         >
           <Alert
-            onClose={() => { setOpenErrorSnackbar(false) }}
+            action={
+              <IconButton
+                aria-label="close"
+                color="inherit"
+                size="small"
+                data-testid="close-alert"
+                onClick={() => {
+                  setOpenErrorSnackbar(false);
+                }}
+              >
+                <CloseIcon fontSize="inherit" />
+              </IconButton>
+            }
             severity="error"
             variant="filled"
             sx={{ width: '100%' }}
@@ -88,7 +100,7 @@ const Main = (props) => {
         </Snackbar>
         <Snackbar
           open={openSuccessSnackbar}
-          autoHideDuration={6000}
+          autoHideDuration={4000}
         >
           <Alert
             severity="success"

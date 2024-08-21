@@ -5,15 +5,7 @@ import { CategoryList, DialogCreateCategory } from './components'
 import {
   Box,
   Typography,
-  Toolbar,
   IconButton,
-  AppBar,
-  Avatar,
-  Drawer,
-  ListItem,
-  ListItemButton,
-  ListItemIcon,
-  TextField,
   Container,
   Button,
   Alert,
@@ -21,9 +13,10 @@ import {
 } from '@mui/material'
 import {
   Add as AddIcon,
+  Close as CloseIcon,
 } from '@mui/icons-material'
 import axios from 'axios'
-import helpers from 'helpers'
+import helpers from '../../helpers'
 
 const Main = (props) => {
   const [openErrorSnackbar, setOpenErrorSnackbar] = useState(false)
@@ -38,10 +31,8 @@ const Main = (props) => {
 
   useEffect(() => {
     axios.get(`${helpers.functions.setUrl(process.env.NODE_ENV)}/categories?per_page=${rowsPerPage}&page=${page}`).then((response) => {
-      if (response.status == 200) {
-        setCategories(response.data.categories)
-      }
-    }).catch(error => console.log(error.message))
+      setCategories(response.data.categories)
+    })
   }, [rowsPerPage, page, refresh])
 
   return (
@@ -86,11 +77,23 @@ const Main = (props) => {
 
         <Snackbar
           open={openErrorSnackbar}
-          autoHideDuration={6000}
+          autoHideDuration={4000}
           onClose={() => { setOpenErrorSnackbar(false) }}
         >
           <Alert
-            onClose={() => { setOpenErrorSnackbar(false) }}
+            action={
+              <IconButton
+                aria-label="close"
+                color="inherit"
+                size="small"
+                data-testid="close-alert"
+                onClick={() => {
+                  setOpenErrorSnackbar(false);
+                }}
+              >
+                <CloseIcon fontSize="inherit" />
+              </IconButton>
+            }
             severity="error"
             variant="filled"
             sx={{ width: '100%' }}
@@ -100,7 +103,7 @@ const Main = (props) => {
         </Snackbar>
         <Snackbar
           open={openSuccessSnackbar}
-          autoHideDuration={6000}
+          autoHideDuration={4000}
         >
           <Alert
             severity="success"

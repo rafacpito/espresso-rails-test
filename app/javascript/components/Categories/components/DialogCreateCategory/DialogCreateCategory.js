@@ -1,4 +1,3 @@
-import { useState } from 'react'
 import {
   Typography,
   Button,
@@ -16,7 +15,7 @@ import { useForm } from "react-hook-form"
 import schema from './schema'
 import { yupResolver } from '@hookform/resolvers/yup'
 import axios from 'axios'
-import helpers from 'helpers'
+import helpers from '../../../../helpers'
 
 const DialogCreateEmployee = ({
   open,
@@ -51,19 +50,21 @@ const DialogCreateEmployee = ({
           'Content-Type': 'application/json',
           'X-CSRF-Token': csrf
         },
-      }).then(response => {
-        if (response.status == 201) {
-          setSuccessMessage('Categoria criado com sucesso!')
-          setOpenSuccessSnackbar(true)
-          setRefresh(refresh + 1)
-          setOpen(false)
-          reset()
-          setTimeout(() => {
-            setOpenSuccessSnackbar(false)
-          }, "3000")
-        }
+      }).then(() => {
+        setSuccessMessage('Categoria criada com sucesso!')
+        setOpenSuccessSnackbar(true)
+        setRefresh(refresh + 1)
+        setOpen(false)
+        reset()
+        setTimeout(() => {
+          setOpenSuccessSnackbar(false)
+        }, "3000")
       }).catch(error => {
-        setErrorMessage(error.response.data.error.message)
+        if (error?.response?.data?.error?.message != undefined) {
+          setErrorMessage(error.response.data.error.message)
+        } else {
+          setErrorMessage("Erro interno")
+        }
         setOpenErrorSnackbar(true)
       })
   }
@@ -79,6 +80,7 @@ const DialogCreateEmployee = ({
         Cadastrar categoria
       </DialogTitle>
       <IconButton
+        data-testid="close-dialog"
         aria-label="close"
         onClick={() => { setOpen(false) }}
         sx={{
@@ -93,6 +95,9 @@ const DialogCreateEmployee = ({
         <form onSubmit={handleSubmit(onSubmit)}>
           <Typography variant='body1'>Informe os dados</Typography>
           <TextField
+            inputProps={{
+              "data-testid": "name-input",
+            }}
             margin='normal'
             name='name'
             label='Nome'
@@ -100,13 +105,12 @@ const DialogCreateEmployee = ({
             id='name'
             autoFocus
             fullWidth
-            required
             {...register("name")}
             error={!!errors?.name}
             helperText={errors?.name?.message}
           />
           <Box mt={3}>
-            <Button variant='contained' type='submit' autoFocus>
+            <Button data-testid="create-category-button" variant='contained' type='submit' autoFocus>
               Cadastrar
             </Button>
           </Box>

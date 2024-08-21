@@ -14,7 +14,7 @@ import { styles } from './styles.js'
 import schema from './schema'
 import { yupResolver } from '@hookform/resolvers/yup'
 import axios from 'axios'
-import helpers from 'helpers'
+import helpers from '../../helpers'
 
 const SignUp = () => {
   const [openErrorSnackbar, setOpenErrorSnackbar] = useState(false)
@@ -69,15 +69,17 @@ const SignUp = () => {
           'Content-Type': 'application/json',
           'X-CSRF-Token': csrf
         },
-      }).then(response => {
-        if (response.status == 201) {
-          setOpenSuccessSnackbar(true)
-          setTimeout(() => {
-            window.location.href = '/'
-          }, "3000");
-        }
+      }).then(() => {
+        setOpenSuccessSnackbar(true)
+        setTimeout(() => {
+          window.location.href = '/'
+        }, "3000");
       }).catch(error => {
-        setMessage(error.response.data.error.message)
+        if (error?.response?.data?.error?.message != undefined) {
+          setMessage(error.response.data.error.message)
+        } else {
+          setMessage("Erro interno")
+        }
         setOpenErrorSnackbar(true)
       })
   }
@@ -122,6 +124,9 @@ const SignUp = () => {
               <Typography>Informe os seus dados pessoais</Typography>
             </Box>
             <TextField
+              inputProps={{
+                "data-testid": "name-input",
+              }}
               margin='normal'
               name='name'
               label='Nome'
@@ -129,24 +134,28 @@ const SignUp = () => {
               id='name'
               autoFocus
               fullWidth
-              required
               {...register("name")}
               error={!!errors?.name}
               helperText={errors?.name?.message}
             />
             <TextField
+              inputProps={{
+                "data-testid": "email-input",
+              }}
               margin='normal'
               name='email'
               label='E-mail'
               type='email'
               id='email'
               fullWidth
-              required
               {...register("email")}
               error={!!errors?.email}
               helperText={errors?.email?.message}
             />
             <TextField
+              inputProps={{
+                "data-testid": "password-input",
+              }}
               margin='normal'
               name='password'
               label='Senha'
@@ -154,31 +163,34 @@ const SignUp = () => {
               id='password'
               autoComplete='current-password'
               fullWidth
-              required
               {...register("password")}
               error={!!errors?.password}
               helperText={errors?.password?.message}
             />
             <TextField
+              inputProps={{
+                "data-testid": "company-name-input",
+              }}
               margin='normal'
               name='companyName'
               label='Nome da empresa'
               type='companyName'
               id='companyName'
               fullWidth
-              required
               {...register("companyName")}
               error={!!errors?.companyName}
               helperText={errors?.companyName?.message}
             />
             <TextField
+              inputProps={{
+                "data-testid": "cnpj-input",
+              }}
               margin='normal'
               name='cnpj'
               label='CNPJ'
               type='cnpj'
               id='cnpj'
               fullWidth
-              required
               {...register("cnpj")}
               error={!!errors?.cnpj}
               helperText={errors?.cnpj?.message}
@@ -196,7 +208,7 @@ const SignUp = () => {
         </Box>
         <Snackbar
           open={openErrorSnackbar}
-          autoHideDuration={6000}
+          autoHideDuration={4000}
           onClose={handleClose}
         >
           <Alert
@@ -210,7 +222,7 @@ const SignUp = () => {
         </Snackbar>
         <Snackbar
           open={openSuccessSnackbar}
-          autoHideDuration={6000}
+          autoHideDuration={4000}
         >
           <Alert
             severity="success"

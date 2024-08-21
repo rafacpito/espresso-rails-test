@@ -2,6 +2,10 @@
   "name": "espresso-rails-test",
   "private": true,
   "dependencies": {
+    "@babel/core": "^7.25.2",
+    "@babel/plugin-transform-runtime": "^7.24.7",
+    "@babel/preset-env": "^7.25.3",
+    "@babel/runtime": "^7.25.0",
     "@emotion/react": "^11.11.4",
     "@emotion/styled": "^11.11.5",
     "@fontsource/roboto": "^5.0.13",
@@ -9,8 +13,11 @@
     "@mui/icons-material": "^5.15.21",
     "@mui/material": "^5.15.21",
     "@rails/activestorage": "^7.2.0",
+    "@types/babel__core": "^7.20.5",
     "@types/webpack": "^5.28.5",
     "axios": "^1.7.4",
+    "axios-mock-adapter": "^2.0.0",
+    "babel-loader": "^8.3.0",
     "compression-webpack-plugin": "^9.2.0",
     "css-loader": "^7.1.2",
     "css-minimizer-webpack-plugin": "^7.0.0",
@@ -25,7 +32,7 @@
     "style-loader": "^4.0.0",
     "terser-webpack-plugin": "^5.3.10",
     "use-mask-input": "^3.4.0",
-    "webpack": "^5.92.1",
+    "webpack": "^5.93.0",
     "webpack-assets-manifest": "^5.2.1",
     "webpack-cli": "^4.10.0",
     "webpack-merge": "^5.10.0",
@@ -41,11 +48,10 @@
   },
   "packageManager": "npm@10.8.2",
   "devDependencies": {
-    "@babel/core": "^7.25.2",
-    "@babel/preset-env": "^7.25.3",
     "@babel/preset-react": "^7.24.7",
     "@testing-library/jest-dom": "^6.4.8",
     "@testing-library/react": "^16.0.0",
+    "@testing-library/user-event": "^14.5.2",
     "babel-jest": "^29.7.0",
     "jest": "^29.7.0",
     "jest-environment-jsdom": "^29.7.0",
@@ -65,7 +71,13 @@
       "app/javascript/components"
     ],
     "collectCoverageFrom": [
-      "app/javascript/components/**/*.(js|jsx)"
+      "app/javascript/components/**/*.(js|jsx)",
+      "app/javascript/helpers/**/*.(js|jsx)"
+    ]
+  },
+  "babel": {
+    "presets": [
+      "./node_modules/shakapacker/package/babel/preset.js"
     ]
   }
 }

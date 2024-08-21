@@ -16,7 +16,7 @@ import { useForm } from "react-hook-form"
 import schema from './schema'
 import { yupResolver } from '@hookform/resolvers/yup'
 import axios from 'axios'
-import helpers from 'helpers'
+import helpers from '../../../../helpers'
 
 const DialogEditEmployee = ({
   open,
@@ -57,19 +57,21 @@ const DialogEditEmployee = ({
           'Content-Type': 'application/json',
           'X-CSRF-Token': csrf
         },
-      }).then(response => {
-        if (response.status == 200) {
-          setSuccessMessage('Funcionário editado com sucesso!')
-          setOpenSuccessSnackbar(true)
-          setRefresh(refresh + 1)
-          setOpen(false)
-          reset()
-          setTimeout(() => {
-            setOpenSuccessSnackbar(false)
-          }, "3000")
-        }
+      }).then(() => {
+        setSuccessMessage('Funcionário editado com sucesso!')
+        setOpenSuccessSnackbar(true)
+        setRefresh(refresh + 1)
+        setOpen(false)
+        reset()
+        setTimeout(() => {
+          setOpenSuccessSnackbar(false)
+        }, "3000")
       }).catch(error => {
-        setErrorMessage(error.response.data.error.message)
+        if (error?.response?.data?.error?.message != undefined) {
+          setErrorMessage(error.response.data.error.message)
+        } else {
+          setErrorMessage("Erro interno")
+        }
         setOpenErrorSnackbar(true)
       })
   }
@@ -85,6 +87,7 @@ const DialogEditEmployee = ({
         Editar funcionário
       </DialogTitle>
       <IconButton
+        data-testid="close-edit-dialog"
         aria-label="close"
         onClick={() => { setOpen(false) }}
         sx={{
@@ -99,6 +102,9 @@ const DialogEditEmployee = ({
         <form onSubmit={handleSubmit(onSubmit)}>
           <Typography variant='body1'>Informe os dados</Typography>
           <TextField
+            inputProps={{
+              "data-testid": "name-input",
+            }}
             margin='normal'
             name='name'
             label='Nome'
@@ -112,6 +118,9 @@ const DialogEditEmployee = ({
             helperText={errors?.name?.message}
           />
           <TextField
+            inputProps={{
+              "data-testid": "email-input",
+            }}
             margin='normal'
             name='email'
             label='E-mail'
@@ -125,7 +134,7 @@ const DialogEditEmployee = ({
             helperText={errors?.email?.message}
           />
           <Box mt={3}>
-            <Button variant='contained' type='submit' autoFocus>
+            <Button data-testid="edit-button" variant='contained' type='submit' autoFocus>
               Editar
             </Button>
           </Box>

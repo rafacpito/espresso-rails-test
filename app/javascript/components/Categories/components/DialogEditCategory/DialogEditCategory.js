@@ -16,7 +16,7 @@ import { useForm } from "react-hook-form"
 import schema from './schema'
 import { yupResolver } from '@hookform/resolvers/yup'
 import axios from 'axios'
-import helpers from 'helpers'
+import helpers from '../../../../helpers'
 
 const DialogEditCategory = ({
   open,
@@ -57,18 +57,20 @@ const DialogEditCategory = ({
           'X-CSRF-Token': csrf
         },
       }).then(response => {
-        if (response.status == 200) {
-          setSuccessMessage('Categoria editada com sucesso!')
-          setOpenSuccessSnackbar(true)
-          setRefresh(refresh + 1)
-          setOpen(false)
-          reset()
-          setTimeout(() => {
-            setOpenSuccessSnackbar(false)
-          }, "3000")
-        }
+        setSuccessMessage('Categoria editada com sucesso!')
+        setOpenSuccessSnackbar(true)
+        setRefresh(refresh + 1)
+        setOpen(false)
+        reset()
+        setTimeout(() => {
+          setOpenSuccessSnackbar(false)
+        }, "3000")
       }).catch(error => {
-        setErrorMessage(error.response.data.error.message)
+        if (error?.response?.data?.error?.message != undefined) {
+          setErrorMessage(error.response.data.error.message)
+        } else {
+          setErrorMessage("Erro interno")
+        }
         setOpenErrorSnackbar(true)
       })
   }
@@ -84,6 +86,7 @@ const DialogEditCategory = ({
         Editar categoria
       </DialogTitle>
       <IconButton
+        data-testid="close-edit-dialog"
         aria-label="close"
         onClick={() => { setOpen(false) }}
         sx={{
@@ -98,6 +101,9 @@ const DialogEditCategory = ({
         <form onSubmit={handleSubmit(onSubmit)}>
           <Typography variant='body1'>Informe os dados</Typography>
           <TextField
+            inputProps={{
+              "data-testid": "name-input",
+            }}
             margin='normal'
             name='name'
             label='Nome'
@@ -111,7 +117,7 @@ const DialogEditCategory = ({
             helperText={errors?.name?.message}
           />
           <Box mt={3}>
-            <Button variant='contained' type='submit' autoFocus>
+            <Button data-testid="edit-button" variant='contained' type='submit' autoFocus>
               Editar
             </Button>
           </Box>

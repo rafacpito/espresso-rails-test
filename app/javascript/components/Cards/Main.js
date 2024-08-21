@@ -9,17 +9,19 @@ import {
   Container,
   Button,
   Alert,
-  Snackbar
+  Snackbar,
+  IconButton
 } from '@mui/material'
 import {
   Add as AddIcon,
+  Close as CloseIcon
 } from '@mui/icons-material'
-import helpers from 'helpers'
+import helpers from '../../helpers'
 
 const Main = (props) => {
   const [openErrorSnackbar, setOpenErrorSnackbar] = useState(false)
   const [openSuccessSnackbar, setOpenSuccessSnackbar] = useState(false)
-  const [erroMessage, setErrorMessage] = useState('')
+  const [errorMessage, setErrorMessage] = useState('')
   const [successMessage, setSuccessMessage] = useState('')
   const [cards, setCards] = useState([])
   const [open, setOpen] = useState(false)
@@ -29,17 +31,15 @@ const Main = (props) => {
   const [refresh, setRefresh] = useState(0)
 
   useEffect(() => {
-    axios.get(`${helpers.functions.setUrl(process.env.NODE_ENV)}/cards?per_page=${rowsPerPage}&page=${page}`).then((response) => {
-      if (response.status == 200) {
-        setCards(response.data.cards)
-      }
-    }).catch(error => console.log(error.message))
-
     axios.get(`${helpers.functions.setUrl(process.env.NODE_ENV)}/employees`).then((response) => {
-      if (response.status == 200) {
-        setEmployees(response.data.users)
-      }
-    }).catch(error => console.log(error.message))
+      setEmployees(response.data.users)
+    })
+  }, [])
+
+  useEffect(() => {
+    axios.get(`${helpers.functions.setUrl(process.env.NODE_ENV)}/cards?per_page=${rowsPerPage}&page=${page}`).then((response) => {
+      setCards(response.data.cards)
+    })
   }, [rowsPerPage, page, refresh])
 
   return (
@@ -84,21 +84,33 @@ const Main = (props) => {
 
         <Snackbar
           open={openErrorSnackbar}
-          autoHideDuration={6000}
+          autoHideDuration={4000}
           onClose={() => { setOpenErrorSnackbar(false) }}
         >
           <Alert
-            onClose={() => { setOpenErrorSnackbar(false) }}
+            action={
+              <IconButton
+                aria-label="close"
+                color="inherit"
+                size="small"
+                data-testid="close-alert"
+                onClick={() => {
+                  setOpenErrorSnackbar(false);
+                }}
+              >
+                <CloseIcon fontSize="inherit" />
+              </IconButton>
+            }
             severity="error"
             variant="filled"
             sx={{ width: '100%' }}
           >
-            {erroMessage}
+            {errorMessage}
           </Alert>
         </Snackbar>
         <Snackbar
           open={openSuccessSnackbar}
-          autoHideDuration={6000}
+          autoHideDuration={4000}
         >
           <Alert
             severity="success"

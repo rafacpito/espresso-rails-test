@@ -124,6 +124,9 @@ const CardList = ({
       <TablePagination
         rowsPerPageOptions={[5, 10, 25]}
         labelRowsPerPage={"Quantidade por página:"}
+        SelectProps={{
+          inputProps: { 'data-testid': 'rows-per-page-select' }
+        }}
         component="div"
         count={100}
         page={page - 1}

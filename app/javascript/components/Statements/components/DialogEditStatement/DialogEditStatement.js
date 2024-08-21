@@ -18,7 +18,7 @@ import {
 import { useForm, Controller } from "react-hook-form"
 import schema from './schema'
 import { yupResolver } from '@hookform/resolvers/yup'
-import helpers from 'helpers'
+import helpers from '../../../../helpers'
 
 const DialogEditStatement = ({
   open,
@@ -36,18 +36,27 @@ const DialogEditStatement = ({
   const [files, setFiles] = useState([])
 
   useEffect(() => {
-    if (statement.attachment != null) setFileName(`${statement?.attachment?.file?.original_filename}.${statement?.attachment?.file?.original_extension}`)
-  }, [statement])
+    if (open == true) {
+      if (statement.attachment != null) setFileName(`${statement?.attachment?.file?.original_filename}.${statement?.attachment?.file?.original_extension}`)
+      if (statement?.category?.id == undefined) {
+        setValue('category_id', '')
+      } else {
+        setValue('category_id', statement.category.id)
+      }
+    }
+  }, [open])
 
   const {
     register,
     handleSubmit,
     control,
     reset,
-    formState: { errors }
+    formState: { errors },
+    setValue,
+    getValues
   } = useForm({
     defaultValues: {
-      category_id: statement?.category?.id || ''
+      category_id: ''
     },
     resolver: yupResolver(schema)
   })
@@ -63,20 +72,22 @@ const DialogEditStatement = ({
         'Content-Type': 'multipart/form-data',
         'X-CSRF-Token': csrf
       },
-    }).then(response => {
-      if (response.status == 200) {
-        reset()
-        setFileName('')
-        setSuccessMessage('Comprovante vinculado a despesa e categoria definida.')
-        setOpenSuccessSnackbar(true)
-        setRefresh(refresh + 1)
-        setOpen(false)
-        setTimeout(() => {
-          setOpenSuccessSnackbar(false)
-        }, "3000")
-      }
+    }).then(() => {
+      reset()
+      setFileName('')
+      setSuccessMessage('Comprovante vinculado a despesa e categoria definida.')
+      setOpenSuccessSnackbar(true)
+      setRefresh(refresh + 1)
+      setOpen(false)
+      setTimeout(() => {
+        setOpenSuccessSnackbar(false)
+      }, "3000")
     }).catch(error => {
-      setErrorMessage(error.response.data.error.message)
+      if (error?.response?.data?.error?.message != undefined) {
+        setErrorMessage(error.response.data.error.message)
+      } else {
+        setErrorMessage("Erro interno")
+      }
       setOpenErrorSnackbar(true)
     })
   }
@@ -96,6 +107,7 @@ const DialogEditStatement = ({
         Editar despesa
       </DialogTitle>
       <IconButton
+        data-testid="close-edit-dialog"
         aria-label="close"
         onClick={() => {
           reset()
@@ -124,6 +136,7 @@ const DialogEditStatement = ({
                 <IconButton component="label">
                   <UploadFileIcon />
                   <input
+                    data-testid="file-input"
                     {...register('file')}
                     styles={{ display: "none" }}
                     type="file"
@@ -143,12 +156,15 @@ const DialogEditStatement = ({
           <Controller
             render={({ }) => (
               <TextField
+                inputProps={{
+                  "data-testid": "category-id-input",
+                }}
                 {...register('category_id')}
                 select
                 label="Selecione"
                 fullWidth
                 required
-                defaultValue={statement?.category?.id}
+                value={getValues("category_id")}
               >
                 <MenuItem disabled value="">
                   <em>Categoria</em>
@@ -163,7 +179,7 @@ const DialogEditStatement = ({
             label='Funcionário'
           />
           <Box mt={3}>
-            <Button variant='contained' type='submit' autoFocus>
+            <Button data-testid="edit-statement-button" variant='contained' type='submit' autoFocus>
               Editar
             </Button>
           </Box>

@@ -12,7 +12,7 @@ import {
   Close as CloseIcon
 } from '@mui/icons-material'
 import axios from 'axios'
-import helpers from 'helpers'
+import helpers from '../../../../helpers'
 
 const DialogConfirmArchive = ({
   open,
@@ -36,19 +36,21 @@ const DialogConfirmArchive = ({
       headers: {
         'X-CSRF-Token': csrf
       },
-    }).then((response) => {
-      if (response.status == 200) {
-        if (statements.length == 1 & page > 1) setPage(page - 1)
-        setRefresh(refresh + 1)
-        setSuccessMessage('Despesa arquivada com sucesso!')
-        setOpenSuccessSnackbar(true)
-        setTimeout(() => {
-          setOpenSuccessSnackbar(false)
-        }, 3000)
-        setOpen(false)
-      }
+    }).then(() => {
+      if (statements.length == 1 & page > 1) setPage(page - 1)
+      setRefresh(refresh + 1)
+      setSuccessMessage('Despesa arquivada com sucesso!')
+      setOpenSuccessSnackbar(true)
+      setTimeout(() => {
+        setOpenSuccessSnackbar(false)
+      }, 3000)
+      setOpen(false)
     }).catch(error => {
-      setErrorMessage(error.response.data.error.message)
+      if (error?.response?.data?.error?.message != undefined) {
+        setErrorMessage(error.response.data.error.message)
+      } else {
+        setErrorMessage("Erro interno")
+      }
       setOpenErrorSnackbar(true)
       setOpen(false)
     })
@@ -63,6 +65,7 @@ const DialogConfirmArchive = ({
         Arquivar despesa
       </DialogTitle>
       <IconButton
+        data-testid="close-archive-dialog"
         aria-label="close"
         onClick={() => { setOpen(false) }}
         sx={{
@@ -76,7 +79,7 @@ const DialogConfirmArchive = ({
       <DialogContent>
         <Typography variant='body1'>Ao arquivar a despesa ela será movida para a aba "Arquivadas".</Typography>
         <Box mt={3}>
-          <Button variant='contained' onClick={() => { archiveStatement(index) }} autoFocus>
+          <Button data-testid="archive-statement-button" variant='contained' onClick={() => { archiveStatement(index) }} autoFocus>
             Arquivar
           </Button>
         </Box>

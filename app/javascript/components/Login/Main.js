@@ -14,7 +14,7 @@ import { styles } from './styles.js'
 import schema from './schema'
 import { yupResolver } from '@hookform/resolvers/yup'
 import axios from 'axios'
-import helpers from 'helpers'
+import helpers from '../../helpers'
 
 const Main = () => {
   const [open, setOpen] = useState(false)
@@ -42,11 +42,9 @@ const Main = () => {
           'Content-Type': 'application/json',
           'X-CSRF-Token': csrf
         },
-      }).then(response => {
-        if (response.status == 200) {
-          window.location.href = '/statements/list'
-        }
-      }).catch(error => {
+      }).then(() => {
+        window.location.href = '/statements/list'
+      }).catch(() => {
         setOpen(true)
       })
   }
@@ -93,6 +91,9 @@ const Main = () => {
           >
             <Typography variant="h5">Logar no Expresso</Typography>
             <TextField
+              inputProps={{
+                "data-testid": "email-login-input",
+              }}
               margin='normal'
               name='email'
               label='Usuário'
@@ -105,6 +106,9 @@ const Main = () => {
               helperText={errors?.email?.message}
             />
             <TextField
+              inputProps={{
+                "data-testid": "password-login-input",
+              }}
               margin='normal'
               name='password'
               label='Senha'
@@ -136,7 +140,7 @@ const Main = () => {
         </Box>
         <Snackbar
           open={open}
-          autoHideDuration={6000}
+          autoHideDuration={4000}
           onClose={handleClose}
         >
           <Alert
