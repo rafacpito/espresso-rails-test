@@ -35,3 +35,4 @@ Rodar os comandos:
 Rodar os seguintes comandos:
 - `rake db:setup RAILS_ENV=test` para criar o banco de dados utilizado nos testes
 - `rspec` para rodar os testes
+- para rodar os testes do front: `npm test`
